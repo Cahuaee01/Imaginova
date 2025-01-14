@@ -1,0 +1,30 @@
+<div class="flex flex-col text-center mr-10 ml-10 max-w-[800px]" *ngIf="insideProfile === false">
+    <div class="flex flex-col text-center kalnia-font text-white">
+      <span class="lg:text-5xl text-lg">{{ getDayFromChallengeDate(challenge.challenge_date) }}'s Challenge</span>
+      <span class="lg:text-2xl text-lg">
+        Kindly offered by <span class="chatgpt-text underline decoration-double italic font-black">ChatGPT</span>
+      </span>
+    </div>
+    <div class="rounded-[75px] bg-white mt-1 shadow-lg dm-serif-display-font">
+      <div class="mt-10 ml-10 mr-10 mb-6">
+        <img src="/robot.png" class="max-w-[60px] inline tilt-animation">
+        <h1 class="lg:text-2xl text-lg italic inline text-center">
+          {{challenge.description}}
+        </h1>
+      </div>
+      <div class="flex justify-center lg:justify-end pl-6 pb-6 link"> 
+        <a class="link lg:mr-10 whitespace-nowrap"  [href]="challenge.theme_event" target="_blank">Check today&#39;s theme/event 🛈</a>
+      </div>
+    </div>
+</div>
+
+<div class="flex flex-col place-items-center items-center text-center lg:mr-5 lg:ml-5 mr-10 ml-10 max-w-[800px]" *ngIf="insideProfile === true">
+  <div class="flex flex-col place-items-center items-center text-center kalnia-font text-white">
+    <span class="lg:text-5xl text-lg">{{ getDayFromChallengeDate(challenge.challenge_date) }}'s Challenge</span>
+    <div class="flex rounded-full justify-center max-w-[150px] bg-light_b p-3 m-2 text-white font-mono">
+      <p class="info" (click)="showMore()"> Show more </p>
+    </div>
+  </div>
+</div>
+
+  

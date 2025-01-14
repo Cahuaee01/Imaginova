@@ -1,0 +1,76 @@
+<app-challenge [challenge_id]="challenge_id" [insideProfile]="false" class="flex justify-center"></app-challenge>
+
+<div class="flex justify-start lg:ml-[150px] ml-10 lg:mt-5 mt-3">
+  <button 
+    class="flex items-center p-3 rounded-full bg-gradient-to-r from-lilac to-light_lilac hover:from-light_lilac hover:to-lilac transition duration-300 transform hover:scale-105"
+    [ngClass]="{
+      'scale-90': filterStatus,
+      'scale-100 hover:scale-105': !filterStatus
+    }"
+    (click)="openFilters()">
+    <img src="/filter.png" class="w-8 h-8">
+  </button>
+</div>
+
+<div class="m-5 font-mono lg:w-[80vw] mx-auto">
+  <form 
+      class="flex lg:flex-row flex-col justify-between p-1 mx-auto rounded rounded-lg bg-bl ml-5 mr-5" 
+      [formGroup]="filter_Form" 
+      (ngSubmit)="addFilters()"
+      *ngIf="filterStatus === true"
+    >
+
+    <!-- Sort By Dropdown -->
+    <div class="w-full mt-3 lg:w-1/2 px-2">
+      <label for="sortBy" class="block text-white text-lg font-semibold mb-2">Sort By</label>
+      <select 
+        id="sortBy" 
+        formControlName="sortBy" 
+        class="w-full p-3 rounded-lg bg-light_lilac text-black text-lg"
+      >
+        <option value="likes">Likes</option>
+        <option value="dislikes">Dislikes</option>
+        <option value="date">Date</option>
+      </select>
+    </div>
+
+    <!-- Media Dropdown -->
+    <div class="w-full mt-3 lg:w-1/2 px-2">
+      <label for="media" class="block text-white text-lg font-semibold mb-2">Media</label>
+      <select 
+        id="media" 
+        formControlName="media" 
+        class="w-full p-3 rounded-lg bg-light_lilac text-black text-lg"
+      >
+        <option value="text">Text</option>
+        <option value="photo">Photo</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+
+    <!-- Order Dropdown -->
+    <div class="w-full mt-3 lg:w-1/2 px-2">
+      <label for="order" class="block text-white text-lg font-semibold mb-2">Order</label>
+      <select 
+        id="order" 
+        formControlName="order" 
+        class="w-full p-3 rounded-lg bg-light_lilac text-black text-lg"
+      >
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="min-w-[100px] m-3">
+      <button 
+        type="submit" 
+        class="w-full rounded-lg bg-lilac hover:bg-light_lilac text-[color:white] text-xl py-3"
+      >
+        Apply Filters
+      </button>
+    </div>
+  </form>
+</div>
+
+<app-creation-carousel [isGrid]="true" [itemsPerPage]="6" [showNavButtons]="true" [challenge_id]="challenge_id" [sortBy]="sortBy" [order]="order" [media]="media"></app-creation-carousel>

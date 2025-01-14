@@ -1,0 +1,158 @@
+<div class="flex justify-start ml-10 lg:mt-5 mt-3">
+  <button 
+    class="flex items-center p-3 rounded-full bg-gradient-to-r from-lilac to-light_lilac hover:from-light_lilac hover:to-lilac transition duration-300 transform hover:scale-105"
+    [ngClass]="{
+      'scale-90': filterStatus,
+      'scale-100 hover:scale-105': !filterStatus
+    }"
+    (click)="openFilters()">
+    <img src="/filter.png" class="w-8 h-8">
+  </button>
+</div>
+
+<div class="m-4 font-mono">
+  <form 
+      class="flex lg:flex-row flex-col justify-between p-3 mx-auto rounded rounded-lg bg-bl" 
+      [formGroup]="filter_Form" 
+      (ngSubmit)="addFilters()"
+      *ngIf="filterStatus === true"
+    >
+      <!-- Sort By Dropdown -->
+      <div class="w-full p-2 rounded-lg">
+        <label for="sortBy" class="block text-white text-lg font-semibold mb-2">Sort By</label>
+        <select 
+          id="sortBy" 
+          formControlName="sortBy" 
+          class="w-full p-2 rounded-lg bg-light_lilac text-black text-lg"
+        >
+          <option value="date">Date</option>
+          <option value="engaging">Engaging</option>
+        </select>
+      </div>
+
+      <!-- Order Dropdown -->
+      <div class="w-full p-2 rounded-lg">
+        <label for="order" class="block text-white text-lg font-semibold mb-2">Order</label>
+        <select 
+          id="order" 
+          formControlName="order" 
+          class="w-full p-2 rounded-lg bg-light_lilac text-black text-lg"
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+
+      <!-- startDate Input -->
+      <div class="w-full p-2 rounded-lg">
+        <p class="block text-white text-lg font-semibold mb-2">Start Date</p>
+        <input 
+          type="date" 
+          formControlName="startDate" 
+          id="startDate" 
+          lang="en"
+          class="focus:outline-none w-full p-2 rounded-lg bg-light_lilac text-black text-lg" 
+        />
+      </div>
+
+      <!-- endDate Input -->
+      <div class="w-full p-2 rounded-lg">
+        <p class="block text-white text-lg font-semibold mb-2">End Date</p>
+        <input 
+          type="date" 
+          formControlName="endDate" 
+          id="endDate" 
+          lang="en"
+          class="focus:outline-none w-full w-full p-2 rounded-lg bg-light_lilac text-black text-lg" 
+        />
+      </div>
+
+      <div *ngIf="filter_Form.hasError('dateRangeInvalid') && filter_Form.get('endDate')?.touched">
+        <p class="text-red-500">End date must be greater than or equal to start date</p>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="min-w-[100px] mt-3">
+        <button 
+          type="submit" 
+          class="w-full rounded-lg bg-lilac hover:bg-light_lilac text-[color:white] text-xl py-3"
+        >
+          Apply filters
+        </button>
+      </div>
+    </form>
+</div>
+
+<div class="flex justify-center mx-auto my-[100px]" *ngIf="isLoading">
+  <app-throbber></app-throbber>
+</div>
+
+<div class="flex flex-col font-mono">
+  <ul *ngIf="!isLoading">
+      <li *ngIf="challenges.length === 0" class="text-center text-black text-2xl p-3 bg-light_b bg-opacity-40">
+        No challenges available for chosen filters.
+      </li>      
+      <li *ngFor="let item of challenges; let i = index" class="flex flex-col justify-evenly p-3">
+        <div class=" flex justify-between place-items-center text-lg text-white bg-bl rounded rounded-lg p-3 shadow shadow-lg">
+          <p class="lg:ml-5"> {{getDayFromChallengeDate(item.challenge_date)}} </p>
+          <div class="flex lg:flex-row flex-col-reverse place-items-center justify-center gap-3">
+            <img src="/robot.png" class="max-w-[40px] inline">
+            <a class="info" [href]="item.theme_event" target="_blank"> Theme/Event </a>
+          </div>
+          <p class="info lg:mr-5" (click)="showMore(item.challenge_id!)"> Show more </p>
+        </div>
+          
+          <app-creation-carousel 
+          [itemsPerPage]="3" [showNavButtons]="true" [challenge_id]="item.challenge_id"> 
+          </app-creation-carousel>
+      </li>   
+  </ul>
+</div>
+
+<div class="flex flex-row items-center w-full">
+  <div class="flex-1 border-t border-gray-300"></div>
+</div>      
+
+<!-- Pulsanti di navigazione -->
+<div class="flex justify-between items-center mt-5 ml-10 mr-10 mb-2"
+    *ngIf="challenges.length > 0">
+    
+    <!-- Pulsante sinistro o spazio -->
+    <button 
+      class="bg-[color:#8C6FD8] hover:bg-[color:#E0D7F6] text-white font-bold py-2 px-4 rounded-full lg:ml-40"
+      (click)="previousPage()"
+      *ngIf="currentPage != 1"
+      [disabled]="currentPage === 1">
+      <img src="/previous.png" class="w-6 h-6">
+    </button>
+    <span class="invisible bg-[color:#2A3B87] text-white font-bold py-2 px-4 rounded lg:ml-40" 
+      *ngIf="currentPage === 1"></span>
+
+    <!-- Numero di pagina -->
+    <p class="font-bold py-2 px-4" *ngIf="currentPage !== totalPages">
+      {{currentPage}}...
+      <span 
+        [class.cursor-pointer]="currentPage !== totalPages" 
+        [class.text-blue-500]="currentPage !== totalPages" 
+        [class.hover\:underline]="currentPage !== totalPages" 
+        (click)="currentPage !== totalPages && goToLastPage()">
+        {{totalPages}}
+      </span>
+    </p>  
+    
+    <p class="font-bold py-2 px-4" *ngIf="currentPage === totalPages">
+      {{currentPage}}
+    </p>
+    
+    <!-- Pulsante destro o spazio -->
+    <button 
+      class="bg-[color:#8C6FD8] hover:bg-[color:#E0D7F6] text-white font-bold py-2 px-4 rounded-full lg:mr-40"
+      (click)="nextPage()"
+      *ngIf="!disableNext"
+      [disabled]="disableNext">
+      <img src="/next.png" class="w-6 h-6">
+    </button>
+    <span class="invisible bg-[color:#2A3B87] text-white font-bold py-2 px-4 rounded lg:mr-40" 
+      *ngIf="disableNext"></span>
+</div>
+

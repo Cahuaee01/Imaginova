@@ -1,0 +1,4 @@
+# File di configurazione personali
+.env
+.env.local
+.env.*.local

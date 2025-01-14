@@ -1,0 +1,20 @@
+<section class="flex lg:flex-row flex-col lg:justify-evenly place-items-center mb-10">
+  <!-- Daily Challenge Component -->
+    <div class="mr-10 ml-10 max-w-[650px]">
+      <app-daily-challenge class="p-3" (challengeIdChange)="updateChallengeId($event)" (refreshCreations)="callLoadCreations()"></app-daily-challenge>
+    </div>
+    
+    <!-- Login component -->
+    <app-login 
+    class="mt-10 mr-10 ml-10" 
+    ></app-login>
+</section>
+
+<h1 class="kalnia-font mb-10 flex text-center justify-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[color:#8C6FD8] to-[color:#E0D7F6] transform transition duration-500 hover:scale-105">
+  Check today's most popular creations!
+</h1>
+
+<app-creation-carousel [itemsPerPage]="10" [showNavButtons]="false"></app-creation-carousel>
+
+
+  

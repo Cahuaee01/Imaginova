@@ -1,0 +1,144 @@
+<!--LOG IN-->
+<div class="md:w-[375px] bg-white rounded-lg shadow" *ngIf="activeSection === 'login' && status === null">
+  <div class="p-6 space-y-5 border border-double border-light_b rounded-lg place-items-center">
+    <h1 class="text-2xl kalnia-font">Log in now</h1>
+    <form 
+      class="w-full p-4 space-y-3 mx-auto place-items-center mx-5" 
+      [formGroup]="login_Form" 
+      (ngSubmit)="handleLogin()"
+    >
+      <!-- Email Input -->
+      <div class="w-full border border-double p-2 rounded-lg">
+        <input 
+          type="text" 
+          formControlName="login_email" 
+          id="login_email" 
+          placeholder="Your email" 
+          class="focus:outline-none w-full" 
+          required
+        />
+        <div *ngIf="login_submitted && login_Form.controls.login_email.errors?.['required']">
+          <p class="form-error">Email is required.</p>
+        </div>
+        <div *ngIf="login_submitted && login_Form.controls.login_email.errors?.['invalidEmail']">
+          <p class="form-error">Please enter a valid email address.</p>
+        </div>
+      </div>
+
+      <!-- Password Input -->
+      <div class="w-full border border-double p-2 rounded-lg">
+        <input 
+          type="password" 
+          formControlName="login_pass" 
+          id="login_password" 
+          placeholder="Your password" 
+          class="focus:outline-none w-full" 
+          required
+        />
+        <div *ngIf="login_submitted && login_Form.controls.login_pass.errors?.['required']">
+          <p class="form-error">Password is required.</p>
+        </div>
+        <div *ngIf="login_submitted && login_Form.controls.login_pass.errors?.['minlength']">
+          <p class="form-error">Password should contain at least 8 characters.</p>
+        </div>
+        <div *ngIf="login_submitted && login_Form.controls.login_pass.errors?.['invalidPassword']">
+          <p class="form-error">Password must be 8-16 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="w-full">
+        <button 
+          type="submit" 
+          class="w-full border border-double rounded-lg bg-bl text-[color:white] text-xl py-2"
+        >
+          Log in
+        </button>
+      </div>
+
+      <!-- Forgotten password link to be developed -->
+      <div>
+        <p class="text-[color:gray] text-sm">Forgotten password? 
+          <a (click)="setActiveSection('forgotten')" class="link">Click here.</a>
+        </p> 
+      </div>
+    </form>
+    <div>
+      <p class="text-[color:gray] text-sm">Don't have an account? 
+        <a routerLink="/public/sign-up" class="link">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!--RESET PASSWORD-->
+<div class="md:w-[375px] bg-white rounded-lg shadow mb-10" *ngIf="activeSection === 'forgotten'">
+  <div class="p-6 space-y-5 border border-double border-light_b rounded-lg place-items-center" *ngIf="status === null">
+    <h1 class="text-2xl kalnia-font">Forgotten password</h1>
+    <form 
+      class="w-full p-4 space-y-3 mx-auto place-items-center mx-5" 
+      [formGroup]="reset_Form" 
+      (ngSubmit)="handleReset()"
+    >
+      <!-- Email Input -->
+      <div class="w-full border border-double p-2 rounded-lg">
+        <input 
+          type="text" 
+          formControlName="reset_email" 
+          id="reset_email" 
+          placeholder="Your email" 
+          class="focus:outline-none w-full" 
+          required
+        />
+        <div *ngIf="reset_submitted && reset_Form.controls.reset_email.errors?.['required']">
+          <p class="form-error">Email is required.</p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="w-full">
+        <div class="flex justify-center mx-auto my-3" *ngIf="isLoading">
+          <app-throbber></app-throbber>
+        </div>
+        <button 
+          type="submit" 
+          class="w-full border border-double rounded-lg bg-bl text-[color:white] text-xl py-2"
+          *ngIf="!isLoading"
+        >
+          Request password reset
+        </button>
+      </div>
+    </form> 
+    <div>
+      <p class="text-[color:gray] text-sm">Already have an account? <a (click)="setActiveSection('login')" class="link">Log in</a></p>
+  </div>
+  </div>
+</div>
+
+<!-- Success Message -->
+<div *ngIf="status === 'success'">
+  <div class="md:w-[375px] bg-white rounded-lg shadow justify-center">
+    <div class="p-10 space-y-5 border border-double border-light_b rounded-lg place-items-center">
+      <h1 class="text-3xl text-[color:green]">{{ successTitle }}</h1>
+      <p class="py-3 text-xl">{{ successMessage }}</p>
+      <button class="link w-[130px] border border-double rounded-lg bg-bl text-[color:white] py-2" (click)="setActiveSection('login')">Return to Log in</button>
+    </div>
+  </div>
+</div>
+
+<!-- Error Message -->
+<div *ngIf="status === 'error'">
+  <div class="md:w-[375px] bg-white rounded-lg shadow justify-center">
+    <div class="p-10 space-y-5 border border-double border-light_b rounded-lg place-items-center">
+      <h1 class="text-3xl text-[color:red]">{{ errorTitle }}</h1>
+      <p class="py-3 text-xl">{{ errorMessage }}</p>
+      <div class="flex flex-row items-center gap-10 justify-evenly">
+        <button class="link w-[130px] border border-double rounded-lg bg-bl text-[color:white] py-2" (click)="showReset()">Retry</button>
+        <button class="link w-[130px] border border-double rounded-lg bg-bl text-[color:white] py-2" (click)="setActiveSection('login')">Return to Log in</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,18 @@
+<nav id="header" class="px-1 lg:px-10 h-12vh bg-[#476ABA] text-white z-200 relative">
+  <!-- Logo -->
+  <div class="flex items-center place-items-center justify-between text-lg lg:text-3xl kalnia-font mt-2">
+    <img src="/logo-big.svg" class="desktop-img logos_class hidden lg:block cursor-pointer" routerLink="/private/homepage">
+    <img src="/logo-small.svg" class="mobile-img logos_class block lg:hidden cursor-pointer" routerLink="/private/homepage">
+    <div class="flex justify-end lg:gap-20 gap-5 place-items-center items-center">
+      <div class="flex flex-row place-items-center items-center link cursor-pointer hover:text-[color:#2A3B87] hover:font-bold" *ngIf="isLogged === true" routerLink="/private/gallery" routerLinkActive="active-link">
+        <i class="fa-solid fa-panorama mr-2"></i>
+        <p>Gallery</p>
+      </div>
+      <div class="flex flex-row place-items-center items-center link cursor-pointer hover:text-[color:#2A3B87] hover:font-bold" *ngIf="isLogged === true" [routerLink]="['/private/profile', user_id]" routerLinkActive="active-link">
+        <i class="fa-regular fa-user mr-2"></i>
+        <p>Profile</p>
+      </div>
+      <i class="fa-solid fa-right-from-bracket w-8 lg:w-10 mr-3 cursor-pointer" (click)="handleLogout()" *ngIf="isLogged === true"></i>
+    </div>
+  </div>
+</nav>

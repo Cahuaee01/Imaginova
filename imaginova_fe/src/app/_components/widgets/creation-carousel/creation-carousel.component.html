@@ -1,0 +1,151 @@
+<section class="flex flex-row justify-center" *ngIf="isGrid === false && !isLoading">
+  <div class="p-3 w-full max-w-screen-[500px] relative">
+    <div class="bg-white border border-bl rounded-[100px] shadow-xl my-2 flex justify-center">
+      <ul 
+        class="flex overflow-x-auto text-sm font-medium rounded-lg relative lg:snap-none snap-x snap-mandatory lg:my-[50px] lg:mx-10 md:my-[20px] md:mx-9 my-[40px] mx-5"
+        [ngClass]="{'lg:justify-center': creations.length <= 2}">
+        <!-- Caso vuoto -->
+        <li *ngIf="creations.length === 0" 
+            class="flex justify-center items-center p-5 border-b border-gray-200 rounded-t-lg w-full text-center lg:my-10">
+          No creations to show.
+        </li>
+        <!-- Iterazione -->
+        <li *ngFor="let item of creations; let i = index" class="flex justify-evenly lg:p-10 md:p-5 p-2 mx-4 mb-8 relative snap-always snap-center">
+          <app-creation 
+            [creationItem]="item" 
+            (click)="togglePopup(i)"> 
+          </app-creation>
+          <!-- Mostra la medaglia solo per i primi 3 elementi di ogni pagina -->
+          <ng-container *ngIf="getGlobalIndex(i) < 3">
+            <div class="absolute lg:bottom-[-2px] md:bottom-[-20px] bottom-[-30px]">
+              <img 
+                [src]="getMedalImage(i)" 
+                alt="Medal {{ getGlobalIndex(i) + 1 }}" 
+                class="w-10 h-10">
+            </div>
+          </ng-container>
+        </li>  
+      </ul>
+    </div>
+
+    <!-- Pulsanti di navigazione -->
+    <button 
+      class="absolute left-0 top-1/2 transform -translate-y-1/2 hover:bg-[color:#476ABA] text-bl font-bold py-2 px-4 rounded"
+      (click)="previousPage()"
+      *ngIf="showNavButtons === true && currentPage != 1"
+      [disabled]="currentPage === 1"> <!-- Disabilita se siamo alla prima pagina -->
+      ◀
+    </button>
+    <button 
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 hover:bg-[color:#476ABA] text-bl font-bold py-2 px-4 rounded"
+      (click)="nextPage()"
+      *ngIf="showNavButtons === true && !disableNext"
+      [disabled]="disableNext"> <!-- Disabilita se non ci sono altre pagine -->
+      ▶
+    </button> 
+
+    <!-- Numero di pagina -->
+    <div class="flex justify-center mt-5" *ngIf="showNavButtons === true">
+      <p class="font-bold py-2 px-4">{{currentPage}}</p>
+    </div>
+  </div>
+
+  <app-creation-popup 
+    [creations]="creations" 
+    [selectedCreationIndex]="selectedCreationIndex"
+    [isPopupOpen]="isFullCreationVisible" 
+    (close)="togglePopup()" 
+    *ngIf="isFullCreationVisible">
+  </app-creation-popup>
+
+</section>
+
+<section class="flex flex-col justify-center" *ngIf="isGrid === true && !isLoading">
+  <div *ngIf="creations.length === 0">
+    <p class="flex justify-center items-center p-5 border-b border-gray-200 rounded-t-lg w-full text-center">
+      No creations to show for chosen filters.
+    </p>
+  </div>
+  
+  <div class="bg-white border border-bl rounded-[100px] shadow-xl m-4 flex justify-center">
+    <ul 
+      class="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-12
+      overflow-x-auto text-sm font-medium rounded-lg relative lg:my-[50px] lg:mx-10 md:my-[20px] md:mx-6 my-[40px] mx-5"
+      *ngIf="creations.length > 0">
+      <li 
+        *ngFor="let item of creations; let i = index" 
+        class="flex justify-evenly items-center place-items-center lg:p-6 md:p-5 p-2 mb-10 lg:ml-3 lg:mr-3 relative">
+        <!-- Mostra la medaglia solo per i primi 3 elementi di ogni pagina -->
+        <ng-container *ngIf="getGlobalIndex(i) < 3">
+          <div class="absolute lg:bottom-[-4px] md:bottom-[-20px] bottom-[-30px] z-10" *ngIf="sortBy === 'likes' && order === 'desc'">
+            <img 
+              [src]="getMedalImage(i)" 
+              alt="Medal {{ getGlobalIndex(i) + 1 }}" 
+              class="w-10 h-10">
+          </div>
+        </ng-container>
+        <app-creation [creationItem]="item" class="relative z-1 mb-2" (click)="togglePopup(i)"></app-creation>
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Pulsanti di navigazione -->
+  <div class="flex justify-between items-center mt-5 ml-10 mr-10 mb-2"
+      *ngIf="creations.length > 0">
+      
+      <!-- Pulsante sinistro o spazio -->
+      <button 
+        class="bg-[color:#8C6FD8] hover:bg-[color:#E0D7F6] text-white font-bold py-2 px-4 rounded-full lg:ml-40"
+        (click)="previousPage()"
+        *ngIf="currentPage != 1"
+        [disabled]="currentPage === 1">
+        <img src="/previous.png" class="w-6 h-6">
+      </button>
+      <span class="invisible bg-[color:#2A3B87] text-white font-bold py-2 px-4 rounded lg:ml-40" 
+        *ngIf="currentPage === 1"></span>
+  
+      <!-- Numero di pagina -->
+      <p class="font-bold py-2 px-4">{{currentPage}}</p>
+      
+      <!-- Pulsante destro o spazio -->
+      <button 
+        class="bg-[color:#8C6FD8] hover:bg-[color:#E0D7F6] text-white font-bold py-2 px-4 rounded-full lg:mr-40"
+        (click)="nextPage()"
+        *ngIf="!disableNext"
+        [disabled]="disableNext">
+        <img src="/next.png" class="w-6 h-6">
+      </button>
+      <span class="invisible bg-[color:#2A3B87] text-white font-bold py-2 px-4 rounded lg:mr-40" 
+        *ngIf="disableNext"></span>
+  </div>
+
+  <app-creation-popup 
+    [creations]="creations" 
+    [selectedCreationIndex]="selectedCreationIndex"
+    [isPopupOpen]="isFullCreationVisible" 
+    (close)="togglePopup()" 
+    *ngIf="isFullCreationVisible">
+  </app-creation-popup>
+
+</section>
+
+<div class="flex justify-center mx-auto my-[100px]" *ngIf="isLoading">
+  <app-throbber></app-throbber>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+
+/*Tailwind*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "@fontsource/open-sans";
+@import "@fontsource/kalnia";
+@import "@fontsource/dm-serif-display";
+@import "@fontsource/merriweather";
+
+a.link {
+  @apply underline text-lilac hover:text-[color:bl] visited:text-[color:light_bl] shadow-xl;
+  box-shadow: none;
+  position: relative;
+  z-index: 1; /* Imposta un z-index più alto per i link */
+}
+
+.link {
+  cursor: pointer;
+}
+
+.info {
+  cursor: help;
+}
+
+form .form-error {
+  color: red;
+  font-size: 0.875rem;
+  width: 100%; 
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: left;
+  display: block;
+}
+
+.wave-nav-bg:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  background: #476ABA;
+  border-radius: 0 0 100% 25%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+  
+  
+  

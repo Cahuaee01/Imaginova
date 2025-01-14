@@ -1,0 +1,58 @@
+<div class="flex flex-col text-center" *ngIf="!isLoading">
+  <div class="flex flex-col text-center kalnia-font text-white">
+    <span class="text-5xl">Today's Challenge</span>
+    <span class="text-2xl">
+      Kindly offered by <span class="chatgpt-text underline decoration-double italic font-black">ChatGPT</span>
+    </span>
+  </div>
+  <div class="rounded-[75px] bg-white mt-1 shadow-lg dm-serif-display-font">
+    <div class="mt-10 ml-10 mr-10 mb-6">
+      <img src="/robot.png" class="max-w-[60px] inline tilt-animation">
+      <h1 class="lg:text-2xl text-lg italic inline text-center">
+        {{challenge.description}}
+      </h1>
+      <h1 *ngIf="emojiHtml" [innerHtml]="emojiHtml" id="holiday-emoji" class="lg:text-2xl md:text-xl text-lg inline"></h1>
+    </div>
+    <div class="flex flex-col items-center justify-center">
+      <div class="flex-grow h-px bg-[color:grey] w-2/3"></div>
+      <app-countdown-timer
+        class="p-3 mb-3"
+        [time]="countdownTime"
+        (timerFinished)="onTimerFinished()"
+      ></app-countdown-timer>
+      <div class="flex-grow h-px bg-[color:grey] w-2/3"></div>
+    </div>
+    <div class="mt-3">
+      <h1 class="inline text-2xl">⏰</h1><h1 class="lg:text-2xl text-lg italic inline">FAST! Time is flying!</h1>
+    </div>
+    <div class="flex justify-center lg:justify-end pl-6 pb-6 link"> 
+      <a class="link lg:mr-10 whitespace-nowrap"  [href]="challenge.theme_event" target="_blank">Check today&#39;s theme/event 🛈</a>
+    </div>
+    <div *ngIf="isLogged === true">
+      <button 
+      class="px-4 py-2 rounded-md mb-3"
+      [ngClass]="{
+        'bg-gray-300 opacity-50 cursor-not-allowed': alreadyParticipated,
+        'bg-[#8C6FD8] hover:bg-[#E0D7F6] text-white': !alreadyParticipated
+      }"
+      [disabled]="alreadyParticipated"
+      (click)="toggleUploadPopup()">
+      I'm up!
+      </button>
+      <p *ngIf="alreadyParticipated" class="text-red-500 p-2">You have already participated in today's challenge!</p>
+    </div>       
+  </div>
+</div>
+
+<!-- Popup Upload Component -->
+<app-upload-popup 
+  [isVisible]="isUploadPopupVisible" 
+  (closePopup)="toggleUploadPopup()"
+  [challengeId]="challengeId"
+  [userId]="userId"
+  (alreadyParticipated)="refreshParticipation()">
+</app-upload-popup>
+
+<div class="flex justify-center mx-auto my-[100px]" *ngIf="isLoading">
+  <app-throbber></app-throbber>
+</div>

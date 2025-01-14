@@ -1,0 +1,82 @@
+<section class="w-full min-h-screen justify-items-center">
+    <div class="p-2">
+        <h1 class="text-2xl font-serif font-bold text-white text-center link mt-10">
+            <a (click)="setActiveSection('about')">About Emilia</a> | <a (click)="setActiveSection('skills')">Skills</a> | <a (click)="setActiveSection('learn')">Learning Experience</a> | <a (click)="setActiveSection('hobby')">Hobby & Contacts</a>             
+        </h1> 
+    </div>   
+    <div *ngIf="activeSection === 'about'">
+        <div class="container flex lg:flex-row flex-col-reverse place-items-center place-content-center justify-center">
+            <div class="overflow-hidden flex flex-row inline hidden lg:inline">
+                <div class="thought">Hi! 💜</div>
+            </div>
+            <div class="bg-gradient-to-r from-light_lilac to-lilac rounded-lg shadow-lg overflow-hidden inline hidden lg:inline m-10">
+                <img src="/me.jpg" alt="Emilia Napolano" class="w-[45vh] p-2">
+            </div>
+            <div class="overflow-hidden">
+                <div class="thought">I'm Emilia Napolano and I am passionate about creativity and solving complex problems. I enjoy creating functional applications that deliver engaging user experiences. In this project, I worked with Node.js, Express, Sequelize, and PostgreSQL, focusing on scalability and resource optimization. On the frontend side, I worked with Angular to build a dynamic and responsive user interface. My project also integrates a strong focus on text-generative AI, leveraging tools like OpenAI&#39;s GPT models to deliver creative and interactive experiences for users.</div>
+            </div>
+        </div>
+        <div class="font-serif text-white">
+            <ul class="flex flex lg:flex-row flex-col lg:justify-around place-items-center gap-3 bg-light_b p-2">
+                <li>
+                    <a href="https://www.facebook.com/emilia.napolano" target="_blank">
+                        <span class="flex items-center space-x-2"> 
+                            <img src="/fb.png" class="w-[20px]">
+                            <span>facebook.com/emilia.napolano</span>
+                        </span>
+                    </a>
+                </li>            
+                <li>
+                    <a href="https://www.instagram.com/cahuaee" target="_blank">
+                        <span class="flex items-center space-x-2">
+                            <img src="/insta.png" class="w-[20px]">
+                            <span>instagram.com/cahuaee</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.linkedin.com/in/emilia-napolano-2a5292280" target="_blank">
+                        <span class="flex items-center space-x-2">
+                            <img src="/linkedin.png" class="w-[20px]">
+                            <span>linkedin.com/in/emilia-napolano</span>
+                          </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <section class="container">
+        <div id="skills" *ngIf="activeSection === 'skills'" class="bg-white rounded-lg h-[500px]">
+            <div class="mt-10 font-serif text-2xl p-4 flex items-center">
+                <span class="underline text-lilac ml-10">SKILLS</span>
+                <div class="flex-grow h-2 bg-lilac ml-4"></div>
+            </div>
+            <div class="flex lg:flex-row flex-col place-content-center place-items-center">
+                <img src="/skills1.png" class="w-[40vh]">
+                <img src="/skills2.png" class="w-[40vh]">
+            </div>
+        </div>
+        <div id="learn" *ngIf="activeSection === 'learn'" class="bg-white rounded-lg">
+            <div class="mt-10 font-serif text-2xl p-4 flex items-center">
+                <span class="underline text-lilac ml-10">LEARNING EXPERIENCE</span>
+                <div class="flex-grow h-2 bg-lilac ml-4"></div>
+            </div>
+            <div class="place-items-center">
+                <img src="/learn.png" class="w-[100vh]">
+            </div>
+        </div>
+        <div class="flex lg:flex-row flex-col justify-around" id="hobby" *ngIf="activeSection === 'hobby'">
+            <div class="mt-10 font-serif text-2xl p-4 flex flex-col items-center bg-white rounded-lg">
+                <span class="underline text-lilac">HOBBY</span>
+                <div class="w-full h-2 bg-lilac mt-2"></div>
+                <img src="/hobby.png" class="w-[50vh] mt-4">
+            </div>
+            <div class="mt-10 font-serif text-2xl p-4 flex flex-col items-center bg-white rounded-lg" id="contacts">
+                <span class="underline text-lilac">CONTACTS</span>
+                <div class="w-full h-2 bg-lilac mt-2"></div>
+                <img src="/contacts.png" class="w-[70vh] mt-4">
+            </div>
+        </div>
+    </section>    
+</section>

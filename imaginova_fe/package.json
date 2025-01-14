@@ -1,0 +1,49 @@
+{
+  "name": "imaginova-fe",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --disable-host-check --host 0.0.0.0 --port 4200",
+    "backend": "npm run start --prefix ../imaginova_be",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:imaginova_fe": "node dist/imaginova_fe/server/server.mjs"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^18.2.0",
+    "@angular/common": "^18.2.0",
+    "@angular/compiler": "^18.2.0",
+    "@angular/core": "^18.2.0",
+    "@angular/forms": "^18.2.0",
+    "@angular/platform-browser": "^18.2.0",
+    "@angular/platform-browser-dynamic": "^18.2.0",
+    "@angular/router": "^18.2.0",
+    "@fontsource/dm-serif-display": "^5.1.0",
+    "@fontsource/kalnia": "^5.1.0",
+    "@fontsource/merriweather": "^5.1.0",
+    "@fontsource/open-sans": "^5.1.0",
+    "nginx": "^1.0.8",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "twemoji": "^14.0.2",
+    "zone.js": "~0.14.10"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^18.2.11",
+    "@angular/cli": "^18.2.11",
+    "@angular/compiler-cli": "^18.2.0",
+    "@types/jasmine": "~5.1.0",
+    "autoprefixer": "^10.4.20",
+    "jasmine-core": "~5.2.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "~5.5.2"
+  }
+}

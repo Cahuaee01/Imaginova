@@ -1,0 +1,88 @@
+.flip-card {
+  position: relative;
+  background-color: transparent;
+  width: 450px;
+  height: 350px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner::before {
+  content: '';
+  position: absolute;
+  top: -3%;
+  bottom: -3%;
+  left: -3%;
+  right: -3%;
+  background: linear-gradient(to right, #D8A7D4, #8C6FD8);
+  border-radius: 150px; 
+  box-shadow: 0 10px 10px rgba(158, 123, 197, 0.5); 
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  border-radius: 150px; 
+}
+
+.flip-card-front {
+  background-color: #476ABA;
+  color: white;
+}
+
+.flip-card-back {
+  background-color: #476ABA;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+@media (max-width: 1200px) {
+  .flip-card {
+      width: 400px;
+      height: 320px;
+  }
+}
+
+@media (max-width: 992px) {
+  .flip-card {
+      width: 350px;
+      height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .flip-card {
+      width: 300px;
+      height: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flip-card {
+      width: 270px;
+      height: 220px;
+  }
+}
+
+.kalnia-font {
+  font-family: "Kalnia";
+}
+
+.dm-serif-display-font {
+  font-family: "DM Serif Display";
+}

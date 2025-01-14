@@ -1,0 +1,54 @@
+.logos_class {
+    cursor: pointer;
+    max-height: 10vh; 
+}
+
+nav {
+    height: 10vh; 
+    background: #476ABA;
+}
+
+.desktop-img {
+    max-height: 8vh;
+}
+
+.mobile-img {
+    max-height: 10vh;
+}
+
+/* Responsività */
+@media (max-width: 768px) {
+    .desktop-img {
+        display: none;
+    }
+    .mobile-img {
+        display: block;
+    }
+}
+
+.kalnia-font{
+    font-family: "Kalnia";
+}
+
+.active-link {
+    text-decoration: none;
+    font-weight: bold; 
+    color: white; 
+    background-color: #8C6FD8;
+    padding: 0.3em 0.5em; 
+    border-radius: 5px;
+    border: 2px solid #2A3B87;
+}
+
+.active-link:hover {
+    background-color: #2A3B87;
+    color: white; 
+}
+
+.fa-right-from-bracket:hover {
+    color: #2A3B87;
+}
+
+
+
+

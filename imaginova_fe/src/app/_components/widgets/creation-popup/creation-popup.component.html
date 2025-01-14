@@ -1,0 +1,44 @@
+<!-- Overlay per la creazione -->
+<div 
+  class="fixed inset-0 bg-black bg-opacity-80 z-40"
+  *ngIf="isPopupOpen"
+  (click)="closeCreationFullScreen()">
+</div>
+
+<!-- Popup creazione intera -->
+<div 
+  class="fixed inset-0 flex items-center justify-center z-50"
+  *ngIf="isPopupOpen"
+  id="popup">
+
+  <div class="relative">
+    <!-- Freccia sinistra -->
+    <button 
+      class="absolute left-1 top-1/2 transform -translate-y-1/2 hover:bg-bl text-white font-bold py-3 px-1 rounded-lg flex items-center justify-center z-10"
+      (click)="navigateLeft()"
+      *ngIf="selectedCreationIndex > 0">
+      ◀
+    </button>
+    <span class="invisible bg-[color:#2A3B87] text-white font-bold py-3 px-1 rounded ml-3" 
+        *ngIf="selectedCreationIndex === 0"></span>
+
+    <app-creation-big [item]="creations[selectedCreationIndex]"></app-creation-big>
+
+    <!-- Pulsante di chiusura -->
+    <button 
+      class="absolute top-8 right-3 text-white hover:bg-opacity-50 rounded-full p-1 z-20"
+      (click)="closeCreationFullScreen()">
+      ✖
+    </button>
+
+    <!-- Freccia destra -->
+    <button 
+      class="absolute right-1 top-1/2 transform -translate-y-1/2 hover:bg-bl text-white font-bold py-3 px-1 rounded-lg flex items-center justify-center z-10"
+      (click)="navigateRight()"
+      *ngIf="selectedCreationIndex < creations.length - 1">
+      ▶
+    </button>
+    <span class="invisible bg-[color:#2A3B87] text-white font-bold py-3 px-1 rounded mr-3" 
+        *ngIf="disableNext"></span>
+  </div>
+</div>

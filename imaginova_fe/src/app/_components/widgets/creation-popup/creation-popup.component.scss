@@ -1,0 +1,38 @@
+.description {
+    font-family: "Merriweather";
+  }
+
+
+@media (max-width: 768px) {
+  #popup {
+    max-width: 95vw;
+    max-height: 100vh;
+    margin-left: 2.5vh;
+    margin-right: 2vh;
+  }
+}
+
+button {
+  font-family: Arial, sans-serif !important;
+}
+
+.border-around::before {
+  content: '';
+  position: absolute;
+  top: -2%;
+  bottom: -2%;
+  left: -2%;
+  right: -2%;
+  background: linear-gradient(to right, #D8A7D4, #8C6FD8);
+  border-radius: 10px; 
+  box-shadow: 0 20px 20px rgba(158, 123, 197, 0.5); 
+  z-index: -100;
+}
+
+.kalnia-font {
+    font-family: "Kalnia";
+  }
+  
+.dm-serif-display-font {
+font-family: "DM Serif Display";
+}

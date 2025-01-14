@@ -1,0 +1,42 @@
+# Dipendenze di Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# File di log
+logs/
+*.log
+log/
+log*
+logs*
+
+# Output di compilazione
+dist/
+build/
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Impostazioni dell'editor
+.vscode/
+.idea/
+*.swp
+
+# File di configurazione personali
+.env
+.env.local
+.env.*.local
+
+# Cartelle temporanee
+tmp/
+temp/
+
+# Cache del test
+coverage/
+
+# Cartella media
+uploads/
+

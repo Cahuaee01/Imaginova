@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  postgres:
+    image: "postgres:latest"
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+  
+  nginx:
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+
+  backend:
+    env_file:
+      - ./imaginova_be/.env
+    build:
+      context: ./imaginova_be
+      dockerfile: Dockerfile
+    volumes:
+      - /app/node_modules
+      - ./imaginova_be:/app
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+
+  frontend:
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: ./imaginova_fe
+      dockerfile: Dockerfile
+    volumes:
+      - ./imaginova_fe:/app
+      - /app/node_modules

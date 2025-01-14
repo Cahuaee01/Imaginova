@@ -1,0 +1,28 @@
+<div class="flip-card relative w-64 h-96 perspective-1000" tabindex="0">
+  <div class="flip-card-inner w-full h-full transform-style-preserve-3d transition-transform duration-500">
+    <!-- Front side -->
+    <div 
+      class="flip-card-front w-full h-full bg-white shadow-lg overflow-hidden transform hover:scale-105 transition-all flex items-center justify-center">
+      <ng-container *ngIf="creationItem.media_path; else showContent">
+        <img 
+          [src]="image_source" 
+          [alt]="creationItem.title || 'No image available'" 
+          class="w-full h-full object-cover rounded-lg">
+      </ng-container>
+      <ng-template #showContent>
+        <div class="p-4 text-center">
+          <h1 class="lg:text-2xl mt-10 font-bold underline underline-offset-8 kalnia-font text-[color:#2A3B87] bg-white rounded rounded-[100px] lg:p-3 p-1 break-words w-full overflow-hidden">{{ creationItem.title }}</h1>
+          <div class="max-w-sm">
+            <p class="text-xl m-10 lg:line-clamp-4 line-clamp-2 dm-serif-display-font">{{ creationItem.description }}</p>
+          </div>        
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Back side -->
+    <div class="flip-card-back w-full h-full shadow-lg flex flex-col justify-evenly items-center text-white text-center lg:p-10 p-6 transform rotate-y-180">
+      <h1 class="font-bold underline underline-offset-8 lg:text-2xl text-sm lg:p-3 p-1 kalnia-font text-[color:#2A3B87] bg-white rounded rounded-[100px] lg:mt-10 mt-3 break-words w-full overflow-hidden truncate">{{ creationItem.title }}</h1> 
+      <p class="lg:text-2xl text-lg dm-serif-display-font">&#64;{{ creationItem.owner.username }}</p>
+    </div>    
+  </div>
+</div>

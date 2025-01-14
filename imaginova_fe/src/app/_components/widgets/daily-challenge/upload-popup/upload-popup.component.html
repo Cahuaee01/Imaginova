@@ -1,0 +1,144 @@
+<!-- Overlay -->
+<div 
+  class="fixed inset-0 bg-gray-700 bg-opacity-50 z-40"
+  [class.hidden]="!isVisible">
+</div>
+
+<!-- Popup -->
+<div 
+  class="fixed inset-0 flex items-center justify-center z-50 mt-[120px]"
+  *ngIf="isVisible"
+  id="popup">
+  <div 
+    class="relative bg-white rounded-lg shadow-lg max-w-[600px] w-full max-h-[100vh]"
+    (click)="$event.stopPropagation()">
+    <button 
+      class="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+      (click)="toggleUploadPopup()">
+      ✖
+    </button>
+  <!-- UPLOAD CREATION FORM -->
+  <section class="h-full font-serif flex items-center justify-center px-4 sm:px-6 lg:px-8 py-5">
+    <div class="md:w-[600px] bg-white rounded-lg shadow justify-center" *ngIf="uploadStatus === null">
+      <div class="p-6 space-y-5 border border-double border-light_b rounded-lg place-items-center">
+        <h1 class="text-3xl font-bold text-center text-[color:#8C6FD8] mb-4">
+          Share Your Creation
+        </h1>        
+        <form 
+          class="w-full p-4 space-y-3 mx-auto place-items-center mx-5" 
+          [formGroup]="creation_Form" 
+          enctype="multipart/form-data"
+          (ngSubmit)="handleUpload()"
+        >
+          <!-- Title Input con Contatore -->
+          <div class="w-full border border-double p-2 rounded-lg">
+            <div class="flex justify-between items-center">
+              <input 
+                type="text" 
+                formControlName="creation_title" 
+                id="creation_title" 
+                placeholder="Title" 
+                class="focus:outline-none w-full" 
+                maxlength="64"
+                (input)="updateCharacterCount()" 
+                required
+              />
+              <span class="text-sm text-gray-500 ml-2">{{ titleCharCount }}/64</span>
+            </div>
+            <div *ngIf="upload_submitted && creation_Form.controls.creation_title.errors?.['required']">
+              <p class="form-error">Title is required.</p>
+            </div>
+            <div *ngIf="upload_submitted && creation_Form.controls.creation_title.errors?.['maxlength']">
+              <p class="form-error">Title cannot exceed 64 characters.</p>
+            </div>
+          </div>
+
+          <!-- Description Input con Contatore -->
+          <div class="w-full border border-double p-2 rounded-lg">
+            <div class="flex justify-between">
+              <textarea
+                formControlName="creation_description"
+                id="creation_description"
+                placeholder="Write your description here..."
+                class="focus:outline-none w-full resize-none"
+                rows="5"
+                maxlength="4096"
+                (input)="updateDescriptionCharacterCount()"
+              ></textarea>
+              <span class="text-sm text-gray-500 ml-2">{{ descriptionCharCount }}/4096</span>
+            </div>
+            <div *ngIf="upload_submitted && creation_Form.controls.creation_description.errors?.['maxlength']">
+              <p class="form-error">Description cannot exceed 4096 characters.</p>
+            </div>
+          </div>
+
+          <!-- Separator -->
+          <div class="flex flex-row items-center w-full">
+            <div class="flex-1 border-t border-gray-300 mr-2"></div>
+            <p class="text-[color:gray] text-xs py-5">OR</p>
+            <div class="flex-1 border-t border-gray-300 ml-2"></div>
+          </div> 
+          
+          <!--Media input-->
+          <div class="w-full flex flex-col gap-3 text-center border border-double p-2 rounded-lg">
+            <div class="w-full flex flex-col gap-3 text-center border border-double p-2 rounded-lg">
+              <!-- Input file nascosto -->
+              <input 
+                type="file" 
+                #fileInput 
+                (change)="onFileSelected($event)" 
+                accept="image/*" 
+                style="display: none;">
+              
+              <!-- Pulsante personalizzato -->
+              <button 
+                type="button" 
+                (click)="fileInput.click()" 
+                class="custom-button">
+                Choose a file
+              </button>
+            </div>            
+            
+            <!-- Nome del file selezionato -->
+            <span class="file-label">{{ fileName }}</span>
+          </div>          
+          
+          <!-- Submit Button -->
+          <div class="w-full">
+            <button 
+              type="submit" 
+              class="w-full border border-double rounded-lg bg-[color:#8C6FD8] text-[color:white] hover:bg-[color:#E0D7F6] text-xl py-2 mt-2"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="uploadStatus === 'success'">
+      <div class="md:w-[375px] bg-white rounded-lg shadow justify-center">
+        <div class="p-10 space-y-5 border border-double border-light_b rounded-lg place-items-center">
+          <h1 class="text-3xl text-[color:green]">Upload completed!</h1>
+          <p class="py-3 text-xl">{{ successMessage }}</p>
+          <button class="link w-[130px] border border-double rounded-lg bg-bl text-[color:white] py-2" (click)="toggleUploadPopup()">Return to Homepage</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="uploadStatus === 'error'">
+      <div class="md:w-[375px] bg-white rounded-lg shadow justify-center">
+        <div class="p-10 space-y-5 border border-double border-light_b rounded-lg place-items-center">
+          <h1 class="text-3xl text-[color:red]">Error during creation upload</h1>
+          <p class="py-3 text-xl">{{ errorMessage }}</p>
+          <div class="flex flex-row items-center gap-10 justify-evenly">
+            <button class="link w-[130px] border border-double rounded-lg bg-bl text-[color:white] py-2" (click)="resetStatus()">Retry</button>
+            <button class="link w-[130px] border border-double rounded-lg bg-bl text-[color:white] py-2" (click)="toggleUploadPopup()">Return to Homepage</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

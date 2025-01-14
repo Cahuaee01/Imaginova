@@ -1,0 +1,97 @@
+/* Nascondi la barra di scorrimento verticale */
+ul {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+/* Barra di scroll personalizzata */
+ul::-webkit-scrollbar {
+    height: 8px;
+    background-color: #f1f1f1;
+}
+
+ul::-webkit-scrollbar-thumb {
+    background-color: #2A3B87;
+    border-radius: 4px;
+}
+
+ul::-webkit-scrollbar-thumb:hover { 
+    background-color: #476ABA;
+}
+
+/* Barra di scroll personalizzata */
+div::-webkit-scrollbar {
+    width: 6px;
+    background-color: #f1f1f1;
+}
+
+div::-webkit-scrollbar-thumb {
+    background-color: #2A3B87;
+    border-radius: 4px;
+}
+
+div::-webkit-scrollbar-thumb:hover { 
+    background-color: #476ABA;
+}
+
+/* Barra di scroll personalizzata */
+.description::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f1f1f1;
+}
+
+.description::-webkit-scrollbar-thumb {
+    background-color: #2A3B87;
+    border-radius: 4px;
+}
+
+.description::-webkit-scrollbar-thumb:hover { 
+    background-color: #476ABA;
+}
+
+#popup{
+  position: fixed;
+  z-index: 50;
+  background-color: transparent;
+}
+
+.description {
+  font-family: "Merriweather";
+}
+
+
+@media (max-width: 768px) {
+#popup {
+  max-width: 95vw;
+  max-height: 100vh;
+  margin-left: 2.5vh;
+  margin-right: 2vh;
+}
+}
+
+button {
+font-family: Arial, sans-serif !important;
+}
+
+.border-around::before {
+content: '';
+position: absolute;
+top: -2%;
+bottom: -2%;
+left: -2%;
+right: -2%;
+background: linear-gradient(to right, #D8A7D4, #8C6FD8);
+border-radius: 10px; 
+box-shadow: 0 20px 20px rgba(158, 123, 197, 0.5); 
+z-index: -100;
+}
+
+.kalnia-font {
+  font-family: "Kalnia";
+}
+
+.dm-serif-display-font {
+font-family: "DM Serif Display";
+}
+
+

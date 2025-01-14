@@ -1,0 +1,100 @@
+<div class="card border-around">
+  <div class="card-content relative flex lg:flex-row flex-col-reverse lg:w-[75vw] md:w-[60vh] w-[40vh] lg:h-[90vh] h-[80vh] rounded-lg bg-light_b border-around"
+      [ngClass]="{'justify-center place-items-center items-center': item.description && !item.media_path}">
+
+      <!-- Creazione -->
+      <div class="flex justify-center items-center h-auto lg:ml-10 m-8"
+        *ngIf="item?.media_path">
+        <img 
+        [src]="getImageSource(item)" 
+        alt="Fullscreen Image" 
+        class="max-w-full max-h-[50vw] rounded-lg hover:scale-125 link"
+        (click)="openImageFullScreen()">
+      </div>
+      
+      <div class="flex flex-col justify-between place-items-center items-center lg:mt-15 mt-10 lg:mr-10 mr-0 w-full flex-grow">
+          <h2 class="lg:text-3xl text-lg lg:mt-0 mt-5 text-white font-bold kalnia-font mb-5 bg-[color:#8C6FD8] lg:min-w-[400px] rounded-lg text-center p-2 break-words title">
+              {{ item.title }}
+          </h2>
+
+          <div class="flex flex-col justify-center place-items-center items-center max-h-[50vh] lg:p-2 p-1">
+              <!-- Testo senza immagine -->
+              <p *ngIf="item.description && !item?.media_path"
+              class="m-10 overflow-x-hidden lg:max-w-[60vh] min-h-[20vh] lg:text-2xl text-lg text-white overflow-y-auto whitespace-pre-line break-words description">
+              {{ item.description }}
+              </p>  
+
+              <p *ngIf="!item.description"
+              class="overflow-x-hidden pt-20 pb-20 pl-4 pr-4 lg:text-base text-center text-lg text-white overflow-y-auto whitespace-pre-line break-words description">
+              No description
+              </p>  
+
+              <!-- Testo con immagine-->
+              <p *ngIf="item.description && item?.media_path"
+              class="m-10 lg:max-h-[400px] max-h-[150px] overflow-x-hidden lg:text-base text-lg text-white overflow-y-auto whitespace-pre-line break-words description">
+              {{ item.description }}
+              </p>  
+          </div>
+
+          <!-- Contenitore per nome utente e data -->
+          <div class="flex justify-evenly items-center w-full text-lg text-white dm-serif-display-font lg:p-3">
+              <p (click)="showProfile(item.owner.imaginova_user_id!)" class="link">&#64;{{ item.owner.username }}</p>
+              <p (click)="showMore(item.challenge!)" class="link">{{ getDayFromCreationDate(item.creation_date) }}</p>
+          </div>
+
+          <!-- Sezione con like e dislike -->
+          <div class="flex mb-2 w-full justify-center lg:gap-[100px] gap-5">
+              <!-- Like -->
+              <div class="flex flex-col items-center">
+              <button type="button" class="border border-blue-700 bg-[color:#8C6FD8] font-medium rounded-full text-center inline-flex items-center"
+              [ngClass]="{'bg-blue-700': item.voteStatus === 'like' }"
+              (click)="setVote(item,'like')">
+                  <img src="like.png" alt="like">
+                  <span class="m-4 text-white">{{ item.positiveVotes }}</span>
+              </button>
+              </div>
+          
+              <!-- Dislike -->
+              <div class="flex flex-col items-center">
+              <button type="button" class="border border-red-700 bg-[color:#8C6FD8] font-medium rounded-full text-center inline-flex items-center"
+              [ngClass]="{'bg-red-700': item.voteStatus === 'dislike' }"
+              (click)="setVote(item,'dislike')">
+                  <img src="dislike.png" alt="dislike">
+                  <span class="m-4 text-white">{{ item.negativeVotes }}</span>
+              </button>
+              </div>
+          </div>
+      </div>  
+  </div>
+</div>
+
+<!-- Overlay per immagine -->
+<div 
+  class="fixed inset-0 bg-black bg-opacity-90 z-50"
+  *ngIf="isFullImageVisible && isLogged"
+  (click)="closeImageFullScreen()">
+</div>
+
+<!-- Popup creazione intera -->
+<div 
+  class="fixed inset-0 flex items-center justify-center z-50"
+  *ngIf="isFullImageVisible && isLogged"
+  id="popup">
+  
+  <!-- Contenitore relativo per l'immagine e il pulsante -->
+  <div class="relative">
+    <!-- Creazione a schermo intero -->
+    <img 
+      [src]="fullscreenImagePath" 
+      alt="Fullscreen Image" 
+      *ngIf="item?.media_path"
+      class="rounded-lg shadow-lg w-full max-h-[80vh]">
+    
+    <!-- Pulsante di chiusura -->
+    <button 
+      class="absolute top-2 right-2 text-white bg-[color:#E0D7F6] bg-opacity-75 hover:bg-opacity-50 rounded-full p-3 z-20"
+      (click)="closeImageFullScreen()">
+      ✖
+    </button>
+  </div>
+</div>
