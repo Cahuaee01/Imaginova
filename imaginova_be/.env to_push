@@ -1,12 +1,10 @@
-DB_NAME= "Tirocini"
-DB_HOST= "172.16.2.23"
-DB_PORT= "5432"
+DB_NAME= "defaultdb"
 DB_SSL= "true"
 
 AI_PROMPT="Generate multiple creative challenges for today based on a theme or event relevant to the month of ${MESE} (such as holidays, cultural or seasonal events). The challenge must ask the user to create a short text (such as a poem, sentence, reflection or any other textual content) or a photograph that represents the proposed theme or event. The generated challenge must be formatted as follows: Title: Challenge Description. For example: Black Friday: Share a reflection on what is invaluable to you, regardless of price, or take a photo of a special item. Generate at least three challenges, of which at least one of the three must be related to ${MESE} ${GIORNO} and must contain the corresponding date in the title. Keep challenge text within 200 characters. Use a fun and engaging tone. Don't add any more sentences other than the challenges I asked for. "
 CHALLENGE_CREATION_SCHEDULING='0 0 0 * * *'
-CHALLENGE_CREATION_SCHEDULING_TEST='0 * * * * *'
-CHALLENGE_UPLOAD_TIME=11
+CHALLENGE_CREATION_SCHEDULING_TEST='*/3 * * * *'
+CHALLENGE_UPLOAD_TIME=13
 IMAGE_FOLDER="uploads"
 
 SMTP_HOST="smtp.gmail.com"
@@ -17,7 +15,12 @@ EMAIL_SUBJECT="[IMAGINOVA] Password reset request"
 EMAIL_TEXT="Your OTP code is: {{otp}}"
 EMAIL_HTML="<p>Dear Imaginova user,</p><p>You requested to reset your password. Use the following link to reset your password:</p><a href=\"http://localhost:4200/public/password-reset?otp={{otp}}\">Reset your password</a><p>This code is valid for 1 hour.</p>"
 
-PORT=5000
+PORT=3000
 
-MESE=MESE
-GIORNO=GIORNO
+MESE="Placeholder"
+GIORNO="Placeholder"
+
+
+
+
+

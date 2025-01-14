@@ -15,7 +15,7 @@ dotenv.config();
 
 export class UserService{
     /************************************************************** RESET PASSWORD **************************************************************/
-    //controllo se l'email è già presente in db
+    // Controlla se l'email è già presente in db
     static async checkEmail(email) {
         try {
             const user = await db.imaginova_user.findOne({
@@ -32,7 +32,7 @@ export class UserService{
         }
     }
 
-    //controllo se c'è già una richiesta di reset password
+    // Controlla se c'è già una richiesta di reset password
     static async checkIfPending(email) {
         try {
             const pending_req = await db.pending_request.findOne({
@@ -42,19 +42,18 @@ export class UserService{
             const now = new Date();
     
             if (pending_req) {
-                //conversione esplicita di expiration in oggetto Date
                 const expiration = new Date(pending_req.expiration);
     
                 if (expiration > now) {
-                    //la richiesta è ancora valida, non consentire una nuova richiesta
+                    // La richiesta è ancora valida, non consentire una nuova richiesta
                     return { code: 0, message: "A reset request is already pending for this email." };
                 } else {
-                    //la richiesta è scaduta, quindi può essere sovrascritta
+                    // La richiesta è scaduta, quindi può essere sovrascritta
                     await db.pending_request.destroy({ where: { email } });
                     return { code: 1, message: "A reset request had expired for this email. New reset request initialized" };
                 }
             }
-            //nessuna richiesta esistente
+            // Nessuna richiesta esistente
             return { code: 1, message: "A reset request doesn't exist for this email." };
         } catch (error) {
             logger.error(`Error during pending request check: ${error.message}`, { stack: error.stack });
@@ -63,7 +62,7 @@ export class UserService{
     }
     
 
-    //creazione dell' OTP, ritorna l'otp
+    // Creazione dell' OTP, ritorna l'otp
     static async createOTPforSpecificEmail(email) {
         const otp = crypto.randomBytes(2).toString("hex");
 
@@ -79,7 +78,7 @@ export class UserService{
         return { otp, code: 1, message: "Otp created" };
     }    
 
-    //crea ed invia l'email con rimpiazzo del placeholder otp
+    // Crea ed invia l'email con rimpiazzo del placeholder otp
     static async createAndSendEmail(email, otp){
         const template = emailTemplates.resetPassword;
         const messageText = template.text.replace("{{otp}}", otp);
@@ -98,7 +97,7 @@ export class UserService{
         return {code: 1, message: "Email created and sent with otp."};
     }
 
-    //richiesta del reset della password
+    // Richiesta del reset della password
     static async resetPassword(email){
         try{
             const user = await this.checkEmail(email);
@@ -131,7 +130,7 @@ export class UserService{
 
     /************************************************************** OTP VALIDATION AND PASSWORD RESET SAVE **************************************************************/
     
-    //verifica dell'otp, in caso positivo restituisce la mail di chi ha quell'otp
+    // Verifica dell'otp, in caso positivo restituisce la mail di chi ha quell'otp
     static async otpVerify(otp){
         const request = await db.pending_request.findOne({
             where: { otp }
@@ -143,7 +142,7 @@ export class UserService{
         return { code: 0, message: "Otp is not verified or user has not requested a password reset."}
     }
 
-    //salva la nuova password nel db a patto che il codice otp sia valido e che l'utente esista, poi rimuove la pending request
+    // Salva la nuova password nel db a patto che il codice otp sia valido e che l'utente esista, poi rimuove la pending request
     static async saveNewPassword(email, password, otp) {
         try {
             const otp_verified = await UserService.otpVerify(otp);
@@ -190,7 +189,7 @@ export class UserService{
     }
     
 
-    //inserisce la nuova password nel db, a patto che rispetti la regex
+    // Inserisce la nuova password nel db, a patto che rispetti la regex
     static async insertNewPassword(email, password, otp){
         try{
             if (!Regex.passwordRegex.test(password)) {
@@ -215,14 +214,13 @@ export class UserService{
     }
 
     /************************************************************** SIGN UP **************************************************************/
-    //hash della password;
-
+    // Hash della password;
     static async hashPassword(password) {
         const hash = crypto.pbkdf2Sync(password, process.env.FIXED_SALT, 1000, 64, 'sha512').toString('hex');
         return hash;
     }
 
-    //validazione credenziali
+    // Validazione credenziali
     static async checkCredentials(user) {
         try {
             const { username, email, password1, password2 } = user;
@@ -250,7 +248,7 @@ export class UserService{
                 return { code: 0, message: "Passwords do not match." };
             }
 
-            //controllo unicità di email e username nel database
+            // Controlla l'unicità di email e username nel database
             const existingUser = await db.imaginova_user.findOne({
                 where: {
                     [Op.or]: [{ email }, { username }],
@@ -261,7 +259,7 @@ export class UserService{
                 return { code: 0, message: "The email or username is already taken." };
             }
 
-            //tutte le validazioni sono passate
+            // Tutte le validazioni sono passate
             return { code: 1, message: "Credentials are valid." };
         } catch (error) {
             logger.error(`Error during validation: ${error.message}`, { stack: error.stack });
@@ -269,7 +267,7 @@ export class UserService{
         }
     }
 
-    //registra un nuovo utente nel db
+    // Registra un nuovo utente nel db
     static async register(username, email, password1, password2){
         try {
             const validation = await this.checkCredentials({ username, email, password1, password2 });
@@ -278,21 +276,25 @@ export class UserService{
                 return { code: 0, message: validation.message }
             }
       
-            //crittografa la password
+            // Crittografa la password
             const hashedPassword = await this.hashPassword(password1);
       
-            //salva il nuovo utente nel database
+            // Salva il nuovo utente nel database
             const user = await db.imaginova_user.create({
                 username,
                 email,
                 password: hashedPassword,
             });
 
-            //setta il ruolo ad utente
-            await db.user_role.create({
-                role: 1,
+            // Imposta il ruolo ad utente
+            const role = await db.user_role.create({
+                role: 1, // Utente
                 imaginova_user: user.imaginova_user_id
             });
+
+            if(!role){
+                return { code: 0, message: "Problems with user role."}
+            }
       
             return { code: 1, message: "User registered successfully!" }
           } catch (error) {
@@ -303,7 +305,7 @@ export class UserService{
 
     /************************************************************** LOG IN **************************************************************/
 
-    //controllo se l'utente esiste e se la password è valida e restituisco il token jwt
+    // Controlla se l'utente esiste e se la password è valida e restituisce il token jwt
     static async login(email, password){  
         try { 
             const user = await db.imaginova_user.findOne({ where: { email} }); 
@@ -331,7 +333,7 @@ export class UserService{
         } 
     }
 
-    //funzione che verifica la validità del token e restituisce l'user_id
+    // Verifica la validità del token e restituisce l'user_id
     static async verifyAndDecodeToken(token) {
         if (token) {
           try {
@@ -356,7 +358,7 @@ export class UserService{
         return { code: 0, message: "Token is invalid." };
     }   
       
-    //preleva l'owner della creazione dall'id della creazione
+    // Preleva l'owner della creazione dall'id della creazione
     static async getOwner(creation_id) {
         const creation = await db.creation.findOne({
             where: {creation_id}
@@ -373,7 +375,7 @@ export class UserService{
         }
     }
 
-    //info del profilo utente
+    // Info del profilo utente
     static async getProfile(user_id) {
         try {
             // Verifica se l'utente esiste
@@ -436,7 +438,7 @@ export class UserService{
                 }
             });
     
-            // Estrai la data della prima creazione
+            // Estrae la data della prima creazione
             const firstCreationDate = creationData.length > 0 ? creationData[0].creation_date : null;
     
             return {

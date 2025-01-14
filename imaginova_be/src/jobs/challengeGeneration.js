@@ -7,7 +7,7 @@ dotenv.config();
 
 export class ChallengeGenerator {
 
-    //usato per generare e salvare nel db 3 challenge giornaliere
+    // Usato per generare e salvare nel db 3 challenge giornaliere
     static async generateAndSaveTodaysChallengeSuggestions() {
         try {
             const date = new Date();
@@ -21,11 +21,11 @@ export class ChallengeGenerator {
 
             logger.info(`Starting challenge generation for ${currentDay} ${currentMonthName}.`);
 
-            // Generates matrix of suggestions
+            // Genera la matrice delle possibili sfide giornaliere
             const matrix = await generateChallenge(currentMonthName, currentDay);
             logger.info(`Generated challenge matrix: ${JSON.stringify(matrix)}`);
 
-            // Insert in database
+            // Le inserisco nel database
             for (const row of matrix) {
                 const [themeEvent, description] = row;
 
@@ -44,6 +44,7 @@ export class ChallengeGenerator {
         }
     }
 
+    // Metodo per eseguire il daily job
     static async runDailyJob() {
         try {
             await this.generateAndSaveTodaysChallengeSuggestions();

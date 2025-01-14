@@ -7,7 +7,7 @@ dotenv.config();
 export class EmailService {
   static transporter = null;
 
-  //inizializzazione configurazione email
+  // Inizializzazione configurazione email
   static initialize(config) {
     this.transporter = nodemailer.createTransport({
     host: config.host,
@@ -19,7 +19,7 @@ export class EmailService {
     });
   }
 
-  //invio email
+  // Invio email
   static async sendMail({ to, subject, text, html }) {
     if (!this.transporter) {
       logger.error("EmailService not initialized. Call initialize() first.");
@@ -42,7 +42,7 @@ export class EmailService {
   }
 }
 
-//templates delle email
+// Templates delle email
 export const emailTemplates = {
   resetPassword: {
     subject: process.env.EMAIL_SUBJECT,

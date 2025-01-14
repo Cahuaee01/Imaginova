@@ -3,7 +3,7 @@ import logger from "../config/logger.js";
 
 export class UserController{
     
-    //richiesta reset password
+    // Richiesta reset password
     static async resetRequest(req, res) {
         const { email } = req.body;
     
@@ -16,7 +16,7 @@ export class UserController{
         }
     }   
     
-    //registrazione utente
+    // Registrazione utente
     static async registerUser(req, res) {
         const { usr: username, email, pwd1: password1, pwd2: password2 } = req.body;
 
@@ -29,7 +29,7 @@ export class UserController{
         }
     }
 
-    //verifica otp
+    // Verifica otp
     static async verifyOtp(req,res){
         const { otp } = req.body;
 
@@ -42,7 +42,7 @@ export class UserController{
         }
     }
 
-    //salvataggio della nuova password
+    // Salvataggio della nuova password
     static async changePassword(req, res) {
         const { email, password, otp } = req.body;
 
@@ -55,7 +55,7 @@ export class UserController{
         }
     }
 
-    //login
+    // Login
     static async login(req, res) { 
         const { email, password } = req.body; 
 
@@ -68,7 +68,7 @@ export class UserController{
         } 
     }
 
-    //verifica della validità del jwt token
+    // Verifica della validità del jwt token
     static async verifyJWT(req, res){
         const { token } = req.body;
 
@@ -81,7 +81,7 @@ export class UserController{
         }
     }
 
-    //retrieval delle info dell'utente per il profilo
+    // Recupero delle info dell'utente per il profilo
     static async getProfile(req, res){
         const user_id = req.params.user_id;
 

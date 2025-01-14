@@ -3,17 +3,17 @@ import { CreationService } from "../services/creation.service.js";
 
 export class CreationController {
 
-    //usato per salvare la creazione a db e per determinare il path dell'eventuale media caricato
+    // Usato per salvare la creazione a db e per determinare il path dell'eventuale media caricato
     static async postUserCreation(req, res) {    
         try {    
             const { title, description, imaginova_user, media_type, storage_type } = req.body;
     
-            //preleva il file da req.files, se presente
+            // Preleva il file da req.files, se presente
             const file = req.files?.file || null;
     
             const challenge = req.params.challenge_id;
     
-            //passa i dati al servizio per postare la creazione
+            // Passa i dati al servizio per postare la creazione
             const postedCreation = await CreationService.postCreation(
                 title,
                 description,
@@ -35,7 +35,7 @@ export class CreationController {
     }      
     
 
-    //usato per controllare se un utente hagià partecipato alla challenge giornaliera
+    // Usato per controllare se un utente ha già partecipato alla challenge giornaliera
     static async checkUserParticipation(req, res) {
         const userId = req.params.user_id;
 
@@ -54,7 +54,7 @@ export class CreationController {
         }
     }
 
-    //usato per mostrare creazioni nel db
+    // Usato per mostrare creazioni nel db  in base ai filtri immessi
     static async getUsersCreations(req, res) {
         const { limit, page, sortBy, order } = req.query;
 
@@ -71,6 +71,7 @@ export class CreationController {
         }
     } 
 
+    // Usato per prelevare le creazioni di un utente in base ai filtri immessi
     static async getUserCreations(req, res) {
         const { limit, page, sortBy, order, media } = req.query;
 
@@ -89,7 +90,7 @@ export class CreationController {
         }
     }
 
-    //usato per mostrare creazioni relative ad una challenge
+    // Usato per mostrare creazioni relative ad una challenge in base ai filtri immessi
     static async getChallengeCreations(req,res) {
         const { limit, page, sortBy, order, media } = req.query;
 
@@ -108,7 +109,7 @@ export class CreationController {
         }
     }
 
-    //usato per impostare un voto
+    // Usato per impostare un voto positivo o negativo
     static async setVote(req,res) { // /challenge/:challenge_id/creation/:creation_id/vote
         const user_id = req.query.imaginova_user;
 
@@ -129,6 +130,7 @@ export class CreationController {
         }
     }
 
+    // Usato per prelevare le informazioni relative ad un voto
     static async getVote(req,res){
         const creation_id = req.params.creation_id;
 

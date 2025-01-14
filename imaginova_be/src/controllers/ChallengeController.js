@@ -2,7 +2,7 @@ import { ChallengeService } from "../services/challenge.service.js";
 
 export class ChallengeController{
 
-    //preleva la challenge quotidiana
+    // Preleva la challenge quotidiana
     static async getCurrentChallenge(req,res){
         const challenge = await ChallengeService.getCurrentChallenge();
 
@@ -13,7 +13,7 @@ export class ChallengeController{
         }
     }
 
-    //preleva tutte le challenges in base ai filtri immessi
+    // Preleva tutte le challenges in base ai filtri immessi
     static async getChallenges(req, res){
         const { limit, page, sortBy, order, startDate, endDate } = req.query;
 
@@ -26,7 +26,7 @@ export class ChallengeController{
         }
     }
 
-    //preleva una specifica challenge
+    // Preleva una specifica challenge
     static async getChallengeByPk(req, res){
         const challenge_id = req.params.challenge_id;
 

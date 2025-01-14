@@ -4,9 +4,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+//status code legenda 
+    // SUCCESS: 1
+    // ERROR: 0
+
 export class CreationService{
 
-    //usato per verificare se un utente ha già partecipato ad una challenge
+    // Usato per verificare se un utente ha già partecipato ad una challenge
     static async hasUserParticipated(id_utente, id_challenge) {
         try {
             const alreadyParticipated = await db.creation.findOne({
@@ -28,7 +32,7 @@ export class CreationService{
     }    
     
 
-    //usato per inserire la creazione nel db a patto che l'utente non abbia già partecipato alla sfida
+    // Usato per inserire la creazione nel db a patto che l'utente non abbia già partecipato alla sfida
     static async postCreation(titolo, descrizione, id_utente, id_challenge, tipo_media, tipo_storage, file) {
         try {
 
@@ -43,12 +47,12 @@ export class CreationService{
             const creationDate = new Date();
             const hasUserParticipated = await this.hasUserParticipated(id_utente, id_challenge);
             
-            //controllo se l'utente ha già partecipato
+            // Controllo se l'utente ha già partecipato
             if (hasUserParticipated.alreadyParticipated) {
                 return { code: 0, message: "User has already posted today's creation." };
             }
     
-            //crea il record della creazione nel database
+            // Crea il record della creazione nel database
             const newCreation = await db.creation.create({
                 title: titolo,
                 description: descrizione,
@@ -63,34 +67,34 @@ export class CreationService{
     
             let mediaPath = null;
     
-            //se è stato caricato un file, determina il percorso e salvalo
+            // Se è stato caricato un file, determina il percorso e salva
             if (file) {
                 const fs = await import('fs'); 
                 const path = await import('path');
 
-                //genera un nome unico per il file
-                const fileExtension = path.extname(file.name); //estrae l'estensione del file
-                const uniqueFileName = `${newCreation.creation_id}${fileExtension}`; //nome unico con estensione
+                // Genera un nome unico per il file
+                const fileExtension = path.extname(file.name); // Estrae l'estensione del file
+                const uniqueFileName = `${newCreation.creation_id}${fileExtension}`; // Nome unico con estensione
 
-                const directory = path.join(process.env.IMAGE_FOLDER, id_challenge); //directory del tipo /uploads/challenge_id/
+                const directory = path.join(process.env.IMAGE_FOLDER, id_challenge); // Directory del tipo /uploads/challenge_id/
                 if (!fs.existsSync(directory)) {
                     fs.mkdirSync(directory, { recursive: true });
                 }
     
-                mediaPath = path.join(directory, uniqueFileName); //path del tipo /uploads/challenge_id/nome_unico.estensione
+                mediaPath = path.join(directory, uniqueFileName); // Path del tipo /uploads/challenge_id/nome_unico.estensione
                 file.mv(mediaPath, (err) => {
                     if (err) throw new Error(`Error moving file: ${err.message}`);
                 });
     
-                tipo_media = 2; //tipo foto
-                tipo_storage = 2; //tipo filesystem
+                tipo_media = 2; // media_type foto
+                tipo_storage = 2; // storage_stype filesystem
             } else {
-                //se non c'è un file, usa tipi predefiniti per il testo    
-                tipo_media = 1; //tipo testo
-                tipo_storage = 1; //tipo database
+                // Se non c'è un file, usa tipi predefiniti per il testo    
+                tipo_media = 1; // media_type testo
+                tipo_storage = 1; // storage_type database
             }
     
-            //aggiorna la creazione con il percorso del media (se presente)
+            // Aggiorna la creazione con il percorso del media (se presente)
             await db.creation.update(
                 {
                     media_path: mediaPath,
@@ -107,7 +111,7 @@ export class CreationService{
         }
     }   
     
-    //mostra creazioni del db
+    // Mostra creazioni del db in base ai filtri immessi
     static async getUsersCreations(limit, page, sortBy, order, challenge, media) {
         try {
             // Validazione dei parametri
@@ -135,9 +139,9 @@ export class CreationService{
     
             // Filtro per media
             if (media === "text") {
-                whereConditions.media_path = null; //solo testo
+                whereConditions.media_path = null; // Solo testo
             } else if (media === "photo") {
-                whereConditions.media_path = { [db.Sequelize.Op.ne]: null }; //solo foto
+                whereConditions.media_path = { [db.Sequelize.Op.ne]: null }; // Solo foto
             }
     
             // Query al database per recuperare le creazioni con i filtri
@@ -212,7 +216,7 @@ export class CreationService{
         }
     }
 
-    //mostra creazioni di un utente
+    // Mostra creazioni di un utente in base ai filtri immessi
     static async getUserCreations(limit,page,sortBy,order,media,user_id) {
         try {
             // Validazione dei parametri
@@ -320,7 +324,7 @@ export class CreationService{
         }
     }
     
-    //vota una creazione
+    // Vota una creazione
     static async setVote(user_id, creation_id, vote_type) {
         try {
             const validVotes = { like: true, dislike: false };
@@ -356,7 +360,8 @@ export class CreationService{
                     raw: true
                 });
             };
-    
+            
+            // Se l'utente ha già espresso un feedback bisogna capire qual è e modificarlo o eliminarlo
             const existingVote = await db.feedback.findOne({
                 where: { imaginova_user: user_id, creation: creation_id }
             });
@@ -412,31 +417,30 @@ export class CreationService{
         }
     }
     
-    
-
+    // Preleva i voti di una creazione
     static async getVote(creation_id){
         try {
             const creation = await db.creation.findOne({
                 where: { creation_id: creation_id },
                 attributes: {
                     include: [
-                        //somma dei voti positivi dalla tabella feedback
+                        // Somma dei voti positivi dalla tabella feedback
                         [
                             db.sequelize.literal(`(
                                 SELECT COUNT(*) 
                                 FROM imaginova.feedback AS f 
                                 WHERE f.creation = creation.creation_id AND f.feedback_value = TRUE
                             )`),
-                            'positiveVotes' //nome alias del campo aggiunto
+                            'positiveVotes' // Nome alias del campo aggiunto
                         ],
-                        //somma dei voti negativi dalla tabella feedback
+                        // Somma dei voti negativi dalla tabella feedback
                         [
                             db.sequelize.literal(`(
                                 SELECT COUNT(*) 
                                 FROM imaginova.feedback AS f 
                                 WHERE f.creation = creation.creation_id AND f.feedback_value = FALSE
                             )`),
-                            'negativeVotes' //nome alias del campo aggiunto
+                            'negativeVotes' // Nome alias del campo aggiunto
                         ]
                     ]
                 },

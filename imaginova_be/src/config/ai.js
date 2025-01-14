@@ -10,6 +10,7 @@ const openai = new OpenAI({
 
 async function generateChallenge(month, day) {
   try {
+    // Modifica del prompt per impostarlo alla data odierna
     let prompt = process.env.AI_PROMPT;
     prompt = prompt.replace(/MESE/g, month);
     prompt = prompt.replace('GIORNO', day);

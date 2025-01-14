@@ -6,6 +6,7 @@ dotenv.config();
 
 export const start = async () => {
   try {
+    // Mette l'applicazione in ascolto sulla porta 3000 da locale e 5000 da docker
     app.listen(process.env.PORT, () => {
       logger.info(`Imaginova is starting, REST API on http://localhost:${process.env.PORT}`);
     })

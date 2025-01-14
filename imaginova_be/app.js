@@ -13,14 +13,15 @@ import { fileURLToPath } from 'url';
 
 dotenv.config();
 
-// Ottieni il percorso della directory corrente
+// Ottiene il percorso della directory corrente
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// routers imports
+// Routers imports
 import { userRouter } from "./src/routes/userRouter.js";
 import { challengeRouter } from "./src/routes/challengeRouter.js";
 
+// Configurazione servizio Email
 import { EmailService } from "./src/config/email.js";
 
 EmailService.initialize({
@@ -30,29 +31,28 @@ EmailService.initialize({
   pass: process.env.EMAIL_PASS,
 });
 
-// start app
+// Start app
 const app = express();
 
-//API will be accessible from anywhere.
 app.use(cors({
   origin: 'http://localhost:4200', // Consenti solo richieste da questa origine
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Consenti metodi specifici
   credentials: true // Consenti cookie e credenziali
 }));
 
-app.options('*', cors());
+app.options('*', cors()); // App accessibile ovunque
 
-//logging http requests
+// Logging delle richieste http
 app.use(morgan('combined', { 
   stream: { 
     write: (message) => logger.info(message.trim()) 
   } 
 })); 
 
-// Parse incoming requests with a JSON payload
+// Fa il parsing delle ichieste con carico JSON
 app.use(express.json());
 
-//error handler
+// Gestore degli errori
 app.use( (err, req, res, next) => {
   logger.error(err.stack);
   res.status(err.status || 500).json({
@@ -61,18 +61,17 @@ app.use( (err, req, res, next) => {
   });
 });
 
-//uploading of a file
+// Caricamento di un file
 app.use(fileUpload({
   createParentPath: true,
   tempFileDir : './uploads/'	
 }));
 
-// Servi i file dalla cartella uploads
+// Serve i file dalla cartella uploads
 const uploadsPath = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(uploadsPath));
 
-//generate OpenAPI spec and show swagger ui
-// Initialize swagger-jsdoc -> returns validated swagger spec in json format
+// Genera specifiche OpenAPI 
 const swaggerSpec = swaggerJSDoc({
   definition: {
     openapi: '3.1.0',
@@ -81,12 +80,12 @@ const swaggerSpec = swaggerJSDoc({
       version: '1.0.0',
     },
   },
-  apis: ['./routes/*Router.js'], // files containing annotations
+  apis: ['./routes/*Router.js'], 
 });
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
-//define routes
+// Definisce le routes
 app.use(userRouter);
 app.use(challengeRouter);
 

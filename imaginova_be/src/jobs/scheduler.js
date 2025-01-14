@@ -16,7 +16,7 @@ cron.schedule(process.env.CHALLENGE_CREATION_SCHEDULING, async () => {
     }
 });
 
-//Schedulazione per il test ogni 3 minuti
+// Schedulazione per il test ogni 3 minuti
 // cron.schedule(process.env.CHALLENGE_CREATION_SCHEDULING_TEST, async () => {
 //     try {
 //         logger.info('Starting test job...');

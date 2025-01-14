@@ -5,34 +5,38 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+//status code legenda 
+    // SUCCESS: 1
+    // ERROR: 0
+
 export class ChallengeService {
 
-    //usato per recuperare la challenge giornaliera
+    // Usato per recuperare la challenge giornaliera
     static async getCurrentChallenge() {
         const now = new Date();
     
-        //clcola le 12pm del giorno corrente
+        // Calcola le 12pm del giorno corrente
         const noonToday = new Date(now.setHours(now.getHours() + 1));
         noonToday.setHours(process.env.CHALLENGE_UPLOAD_TIME, 0, 0, 0); 
     
         let targetDate;
         if (now.getHours() < noonToday.getHours()) {
-            //se siamo prima delle 12pm, usa il giorno precedente
+            // Se siamo prima delle 12pm, usa il giorno precedente
             targetDate = new Date(now);
             targetDate.setDate(targetDate.getDate() - 1);
         } else {
-            //altrimenti usa il giorno corrente
+            // Altrimenti usa il giorno corrente
             targetDate = new Date(now);
         }
     
-        //recupera la sfida del giorno target
+        // Recupera la sfida del giorno target
         const challenge = await db.challenge.findOne({
             where: {
                 definitive: true,
                 [Op.and]: [
                     db.sequelize.where(
                         db.sequelize.cast(db.sequelize.col('challenge_date'), 'DATE'),
-                        targetDate.toISOString().split('T')[0] //confronta solo YYYY-MM-DD
+                        targetDate.toISOString().split('T')[0] // Confronta solo YYYY-MM-DD
                     ),
                 ],
             },
@@ -46,7 +50,7 @@ export class ChallengeService {
         }
     }    
 
-    //usato per prelevare le challenges degli ultimi due mesi, a meno di filtri settati per date specifiche
+    // Usato per prelevare le challenges degli ultimi due mesi, a meno di filtri settati per date specifiche
     static async getChallenges(limit, page, sortBy, order, startDate, endDate) {
         try {
             // Validazione dei parametri
@@ -61,7 +65,7 @@ export class ChallengeService {
     
             const whereConditions = {};
     
-            // Controllo che endDate sia maggiore o uguale a startDate
+            // Controlla che endDate sia maggiore o uguale a startDate
             if (startDate && endDate) {
                 const start = `${startDate}T00:00:00.000Z`;
                 const end = `${endDate}T23:59:59.999Z`;
@@ -83,10 +87,10 @@ export class ChallengeService {
                 };
             }
     
-            // Cerco solo le challenge che sono definitive
+            // Cerca solo le challenge che sono definitive
             whereConditions.definitive = true;
     
-            // Calcolo l'offset
+            // Calcola l'offset
             const offset = (page - 1) * limit;
     
             // Determinazione del campo di ordinamento
@@ -154,10 +158,10 @@ export class ChallengeService {
                 group: ['challenge.challenge_id'],
             });
     
-             //calcolo del numero totale di pagine
+             // Calcolo del numero totale di pagine
             const totalPages = Math.ceil(totalChallenges.length / limit);
 
-            //determina se esiste una pagina successiva
+            // Determina se esiste una pagina successiva
             const hasNextPage = page < totalPages;
 
             if (challenges.length > 0) {
@@ -177,6 +181,7 @@ export class ChallengeService {
         }
     }    
     
+    // Usato per prelevare una challenge dato il suo id
     static async getChallenge(challenge_id){
         try{
             const challenge = await db.challenge.findOne({

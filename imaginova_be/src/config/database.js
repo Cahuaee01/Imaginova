@@ -1,4 +1,3 @@
-// database.js
 import imaginova_user from "../models/User.js";
 import creation from "../models/Creation.js";
 import role from "../models/Role.js"
@@ -13,6 +12,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+let fs = await import('fs');
+
+// Impostazione del database
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
   dialect: 'postgres',
@@ -20,7 +22,8 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
   dialectOptions: {
     ssl: {
         require: true,
-        rejectUnauthorized: false, // Usa con attenzione
+        rejectUnauthorized: false, // Importante per la connessione con database hostato su aiven console
+        ca: [process.env.CA.toString()], // Certificato CA
     },
   },
   pool: {
@@ -50,7 +53,7 @@ db.media_type = media_type(sequelize);
 db.storage_type = storage_type(sequelize);
 db.feedback = feedback(sequelize);
 
-Object.keys(db).forEach((modelName) => {
+Object.keys(db).forEach((modelName) => { // Associazioni
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
