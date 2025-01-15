@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CreationService } from '../../../../_services/creation.service';
 import { UserService } from '../../../../_services/user.service';
 import { CommonModule } from '@angular/common';
-import { ChallengeComponent } from '../../../widgets/challenge/challenge.component';
 import { UserItem } from '../../../../_items/UserType';
 import { CreationCarouselComponent } from '../../../widgets/creation-carousel/creation-carousel.component';
 import { ThrobberComponent } from '../../../widgets/throbber/throbber.component';
@@ -12,31 +11,35 @@ import { ThrobberComponent } from '../../../widgets/throbber/throbber.component'
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, ReactiveFormsModule, ChallengeComponent, CreationCarouselComponent, ThrobberComponent],
+  imports: [CommonModule, ReactiveFormsModule, CreationCarouselComponent, ThrobberComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
   user_id: number | undefined;
-  creationsStatus: boolean = false;
   user_info: UserItem | undefined;
+
   totalLikes: number | undefined;
   totalCreations: number | undefined;
   bestCreation: number = 0;
   firstCreationDate: string | undefined;
   firstCreationStatus: boolean = false;
+
   currentPage: number = 1;
-  itemsPerPage: number = 6; //numero di elementi per pagina
+  itemsPerPage: number = 6; 
   disableNext: boolean = false;
+
   sortBy: string = 'date';
   order: string = 'desc';
   media: string = 'all';
   filterStatus: boolean = false;
-  selectedCreationIndex: number = 0; // indice dell'elemento selezionato
+
+  selectedCreationIndex: number = 0; // Indice dell'elemento selezionato
   popupPosition = { top: '0px', left: '0px' };
   isFullCreationVisible: boolean = false;
   fullscreenImagePath: string = '';
   isFullscreenVisible: boolean = false;
+
   isLoading: boolean = false;
 
   constructor (private route: ActivatedRoute, private creationService: CreationService, private authService: UserService) {}
@@ -45,8 +48,8 @@ export class ProfileComponent {
       // Preleva l'user_id dalla route
       this.route.params.subscribe((params) => {
         this.user_id = +params['user_id'];
-        this.currentPage = 1; // Resetta la paginazione
-        this.disableNext = false; // Resetta lo stato di navigazione
+        this.currentPage = 1; 
+        this.disableNext = false; 
         this.loadProfile();
       });      
 
@@ -65,6 +68,7 @@ export class ProfileComponent {
       },
     );
 
+  // Aggiunge i filtri
   addFilters(){
     this.sortBy = this.filter_Form.value.sortBy as string;
     this.order = this.filter_Form.value.order as string;
@@ -78,11 +82,12 @@ export class ProfileComponent {
     this.currentPage = 1;
   }
 
+  // Apre la barra dei filtri
   openFilters() {
     this.filterStatus = !this.filterStatus; 
   } 
 
-  //apre il popup per la visione dell'intera creazione
+  // Apre il popup per la visione dell'intera creazione
   togglePopup(index: number | null = null, event?: MouseEvent) {
     this.selectedCreationIndex = index as number;
     
@@ -95,13 +100,14 @@ export class ProfileComponent {
     this.isFullCreationVisible = !this.isFullCreationVisible;
   }  
 
-  //preleva la data della creazione
+  // Preleva la data della creazione
   getDayFromCreationDate(date: Date): string {
     const parsedDate = new Date(date);
     const month = parsedDate.getMonth() + 1;
     return `${month.toString()}/${parsedDate.getDate().toString()}/${parsedDate.getFullYear().toString()}`;
   }  
 
+  // Carica il profilo utente
   loadProfile(){
     this.isLoading = true;
     this.authService.getProfile(this.user_id as number).subscribe({

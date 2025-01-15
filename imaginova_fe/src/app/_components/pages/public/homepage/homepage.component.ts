@@ -19,16 +19,17 @@ export class HomepageComponent implements OnInit {
   constructor(private authService: UserService, private router: Router) {}
 
   ngOnInit(): void {
+    // Verifica se l'utente è loggato o meno
     this.authService.isLogged$.subscribe((logged) => {
       this.isLogged = logged;
   
-      if (!this.isLogged) {
+      if (!this.isLogged) { // Se non è loggato lo rimanda alla pagina homepage pubblica
         this.router.navigateByUrl('/public/homepage');
       }
     });
   }  
 
-  //carosello
+  // Carosello
   @ViewChild(CreationCarouselComponent) creationCarousel!: CreationCarouselComponent;
   
     updateChallengeId(challengeId: number) {

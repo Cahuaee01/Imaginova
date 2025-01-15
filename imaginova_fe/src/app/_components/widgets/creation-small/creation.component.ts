@@ -12,9 +12,10 @@ import { config } from '../../../config/config';
 })
 export class CreationComponent implements OnInit{
   @Input() creationItem!: CreationItem;
+
   image_source: string | undefined;
 
-  ngOnInit() {
+  ngOnInit() { // Preleva il path dell'eventuale immagine da caricare
     const baseUrl = config.apiUrl;
     const formattedPath = this.creationItem.media_path;
     this.image_source = formattedPath

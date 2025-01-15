@@ -18,30 +18,39 @@ import { ThrobberComponent } from '../throbber/throbber.component';
 })
 export class CreationCarouselComponent implements OnInit, OnChanges {
   @Input() challenge_id: number | undefined;
+
   @Input() isGrid: boolean = false;
+  @Input() showNavButtons = true;
+
   @Input() sortBy: string = 'likes';
   @Input() order: string = 'desc';
   @Input() media: string = 'all';
+
   creations: CreationItem[] = [];
+
   currentPage: number = 1;
-  @Input() itemsPerPage: number = 2; //numero di elementi per pagina
-  disableNext: boolean = false; //stato del pulsante "Next"
-  @Input() showNavButtons = true;
-  isVisible: boolean = false;
-  selectedCreationIndex: number = 0; // indice dell'elemento selezionato
+  @Input() itemsPerPage: number = 2; 
+  disableNext: boolean = false; 
+ 
+  selectedCreationIndex: number = 0; // Indice dell'elemento selezionato
+
   isLogged = false;
+
   isFullCreationVisible: boolean = false;
   isFullscreenVisible: boolean = false;
+
   user_id: number | undefined;
+
   isLoading: boolean = false;
 
   constructor(private creationService: CreationService, private authService: UserService, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit() { // Verifica se l'utente è loggato
     this.authService.isLogged$.subscribe((logged) => {
       this.isLogged = logged;
     }); 
 
+    // Preleva l'use_id dalla route
     this.route.params.subscribe((params) => {
       this.user_id = +params['user_id'];
       this.creations = []; // Reset dello stato delle creazioni
@@ -51,6 +60,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     });   
   }
 
+  // Se vengono applicati dei filtri e quindi cambiati ricarica le creazioni con quei filtri
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sortBy'] || changes['order'] || changes['media'] || changes['challenge_id']) {
       this.route.params.subscribe((params) => {
@@ -63,14 +73,15 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     }
   }
 
+  // Carica le creazioni
   loadCreations() {
     this.isLoading = true; 
-    if(!this.challenge_id && !this.isGrid){
+    if(!this.challenge_id && !this.isGrid){ // Impostazione non riconosciuta
       this.creations = []; 
       this.currentPage = 1; 
       this.disableNext = false;
       this.isLoading = false; 
-    } else if (this.isGrid && this.user_id) {
+    } else if (this.isGrid && this.user_id) { // Se la modalità è griglia e c'è lo user id mostra le creazioni di un utente specifico
       this.creationService
       .getUserCreations(this.itemsPerPage, this.currentPage, this.sortBy as string, this.order as string, this.media as string, this.user_id as number)
       .subscribe({
@@ -91,7 +102,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
           this.isLoading = false;
         },
       });
-    } else {
+    } else { // Altrimenti mostra le creazioni relative ad una challenge
       this.creationService
       .getChallengeCreations(this.itemsPerPage, this.currentPage, this.sortBy, this.order, this.challenge_id as number, this.media)
       .subscribe({
@@ -120,7 +131,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     }
   }
 
-  //funzione per fare il refresh dei voti
+  // Funzione per fare il refresh dei voti
   refreshVotes() {
     if(this.creations.length === 0 || !this.isLogged) {
       return;
@@ -135,15 +146,16 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
   
         let user_id = Number(this.authService.getUser());
   
-        //verifica se non ci sono voti
+        // Verifica se non ci sono voti
         if (!data.who_voted || data.who_voted.length === 0) {
           this.creations[this.selectedCreationIndex].voteStatus = 'null';
           return;
         }
   
+        // Verifica se nei voti presenti c'è quello dell'utente loggato e nel caso lo colora opportunamente
         for (let i = 0; i < data.who_voted.length; i++) {
           if (data.who_voted[i].imaginova_user == user_id) {
-            //l'utente ha votato e quindi coloro il pulsante
+            // L'utente ha votato e quindi coloro il pulsante
             this.creations[this.selectedCreationIndex].voteStatus = data.who_voted[i].feedback_value ? 'like' : 'dislike';
             break; 
           }
@@ -155,21 +167,21 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     });
   }
 
-  //preleva il path dell'immagine
+  // Preleva il path dell'immagine
   getImageSource(creation: CreationItem): string {
     const baseUrl = config.apiUrl;
     const formattedPath = creation.media_path?.replace(/\\/g, '/');
     return `${baseUrl}/${formattedPath}`;
   }  
 
-  //preleva la data della creazione
+  // Preleva la data della creazione
   getDayFromCreationDate(date: Date): string {
     const parsedDate = new Date(date);
     const month = parsedDate.getMonth() + 1;
     return `${month.toString()}/${parsedDate.getDate().toString()}/${parsedDate.getFullYear().toString()}`;
   }  
 
-  //va alla pagina seguente del carosello
+  // Va alla pagina seguente del carosello
   nextPage() {
     if (!this.disableNext) {
       this.currentPage++;
@@ -177,7 +189,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     }
   }
 
-  //va alla pagina precedente del carosello
+  // Va alla pagina precedente del carosello
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -185,7 +197,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     }
   }
 
-  //apre il popup per la visione dell'intera creazione
+  // Apre il popup per la visione dell'intera creazione
   togglePopup(index: number | null = null) {
     if (index !== null) {
       this.selectedCreationIndex = index;
@@ -195,7 +207,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     }
   }  
 
-  //setta le medaglie del podio
+  // Imposta le medaglie del podio
   getMedalImage(index: number): string {
     const medals = [
         '/gold.png',   // Primo posto
@@ -205,6 +217,7 @@ export class CreationCarouselComponent implements OnInit, OnChanges {
     return medals[index] || '';
   }
 
+  // Preleva l'indice globale della creazione in modo da assegnare la medaglia correttamente
   getGlobalIndex(index: number): number {
     const globalIndex = (this.currentPage - 1) * this.itemsPerPage + index;
     return globalIndex;

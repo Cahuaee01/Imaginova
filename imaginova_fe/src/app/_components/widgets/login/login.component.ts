@@ -14,21 +14,24 @@ import { ThrobberComponent } from '../throbber/throbber.component';
 })
 export class LoginComponent{
   activeSection: string = 'login'; 
+
   login_submitted = false;
   reset_submitted = false;
+
   status: 'success' | 'error' |  null = null;
   errorMessage: string = '';
   successMessage: string = '';
-  token: string = '';
   successTitle: string = '';
   errorTitle: string = '';
+
+  token: string = '';
+  
   isLoading: boolean = false;
 
-  //regex come da backend per maggiore consistenza con la gestione degli errori
+  // Regex come da backend per maggiore consistenza con la gestione degli errori
   static emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   static passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}$/;
   
-  //form per il login
   login_Form = new FormGroup({
     login_email: new FormControl('', [
       Validators.required,
@@ -42,7 +45,7 @@ export class LoginComponent{
     ])
   })
 
-  //validatori personalizzati per stampare il messaggio esatto
+  // Validatori personalizzati per email, password
   emailValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     return LoginComponent.emailRegex.test(control.value) ? null : { invalidEmail: true };
@@ -53,14 +56,13 @@ export class LoginComponent{
     return LoginComponent.passwordRegex.test(control.value) ? null : { invalidPassword: true };
   }
 
-  //form per richiesta di reset della password
   reset_Form = new FormGroup({
     reset_email: new FormControl('', [Validators.required]),
   })
 
   constructor(private userService: UserService, private router: Router) {}
 
-  //gestione del login
+  // Gestione del login
   handleLogin(){
     this.login_submitted = true;
   
@@ -71,7 +73,7 @@ export class LoginComponent{
   
     this.userService.login(this.login_Form.value.login_email as string, this.login_Form.value.login_pass as string).subscribe({
       next: (data) => {
-        this.userService.saveTokenAndUserId(data.token, data.user_id); //saveToken
+        this.userService.saveTokenAndUserId(data.token, data.user_id); 
         this.router.navigateByUrl("/private/homepage");
       },
       error: (err) => {
@@ -86,8 +88,7 @@ export class LoginComponent{
     });
   }
   
-
-  //gestione della richiesta di reset della password
+  // Gestione della richiesta di reset della password
   handleReset() {
     this.reset_submitted = true;
 
@@ -112,7 +113,7 @@ export class LoginComponent{
     });
   }
   
-  //gestori viste
+  // Gestori viste
   showReset(){
     this.status = null;
   }
@@ -122,7 +123,7 @@ export class LoginComponent{
     this.status = null;
   }
 
-  //gestori per i messaggi di errore o successo
+  // Gestori per i messaggi di errore o successo
   showSuccessMessage(successTitle: string, successMessage: string) {
     this.status = 'success';
     this.successMessage = successMessage;

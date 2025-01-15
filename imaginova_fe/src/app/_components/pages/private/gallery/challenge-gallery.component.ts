@@ -16,9 +16,11 @@ import { ThrobberComponent } from '../../../widgets/throbber/throbber.component'
 })
 export class ChallengeGalleryComponent implements OnInit {
   challenges: ChallengeItem[] = [];
+
   itemsPerPage: number = 2;
   currentPage: number = 1;
-  disableNext: boolean = false; // Stato del pulsante "Next"
+  disableNext: boolean = false; 
+  totalPages: number | undefined;
 
   startDate: string | undefined;
   endDate: string | undefined;
@@ -27,12 +29,13 @@ export class ChallengeGalleryComponent implements OnInit {
   todayDate: string | undefined;
   twoMonthsAgoDate: string | undefined;
   filterStatus: boolean = false;
-  totalPages: number | undefined;
+  
   isLoading: boolean = false;
 
   constructor(private challengeService: ChallengeService, private router: Router) {}
 
   ngOnInit() {
+    // Imposta le date di default del filtro ad oggi e due mesi prima di oggi
     this.todayDate = this.getTodayDate(); 
     this.twoMonthsAgoDate = this.getTwoMonthsAgoDate(); 
   
@@ -56,7 +59,7 @@ export class ChallengeGalleryComponent implements OnInit {
     { validators: this.dateRangeValidator }
   );
 
-  //validatore personalizzato per verificare che endDate sia maggiore o uguale a startDate
+  // Validatore personalizzato per verificare che endDate sia maggiore o uguale a startDate
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.parent?.get('startDate')?.value;
     const endDate = control.parent?.get('endDate')?.value;
@@ -67,6 +70,7 @@ export class ChallengeGalleryComponent implements OnInit {
     return null; // Valido
   }
 
+  // Carica le challenges
   loadChallenges() {
     this.isLoading = true;
     this.challengeService.getChallenges(this.itemsPerPage, this.currentPage, this.sortBy, this.order, this.startDate, this.endDate).subscribe({
@@ -89,6 +93,7 @@ export class ChallengeGalleryComponent implements OnInit {
     });
   }
 
+  // Va all'ultima pagina delle challenges
   goToLastPage() {
     if (this.totalPages) {
       this.currentPage = this.totalPages; 
@@ -96,6 +101,7 @@ export class ChallengeGalleryComponent implements OnInit {
     }
   }
 
+  // Preleva la data odierna
   getTodayDate(): string {
     const today = new Date();
     const year = today.getFullYear();
@@ -104,6 +110,7 @@ export class ChallengeGalleryComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  // Preleva la data di due mesi prima
   getTwoMonthsAgoDate(): string {
     const today = new Date();
     today.setMonth(today.getMonth() - 2); //sottrae 2 mesi dalla data odierna
@@ -113,6 +120,7 @@ export class ChallengeGalleryComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  // Preleva la data e la imposta in formato DD-MM-YYYY
   getDayFromChallengeDate(date: Date): string {
     const parsedDate = new Date(date);
     const month = parsedDate.getMonth() + 1;
@@ -135,6 +143,7 @@ export class ChallengeGalleryComponent implements OnInit {
     }
   }
 
+  // Aggiunge i filtri
   addFilters() {
     this.startDate = this.filter_Form.value.startDate as string;
     this.endDate = this.filter_Form.value.endDate as string;
@@ -151,10 +160,12 @@ export class ChallengeGalleryComponent implements OnInit {
     this.loadChallenges();
   }
 
+  // Apre la barra dei filtri
   openFilters() {
       this.filterStatus = !this.filterStatus; 
   }   
 
+  // Va alla galleria relativa alla challenge selezionata
   showMore(challenge_id: number){
     this.router.navigate([`/private/gallery/${challenge_id}`]);
   }

@@ -19,9 +19,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   constructor(private router: Router, private authService: UserService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { // Verifica se l'utente è loggato
     this.subscription = this.authService.isLogged$.subscribe((logged) => {
-      this.isLogged = logged; //aggiorna lo stato in tempo reale
+      this.isLogged = logged; 
       this.user_id = Number(this.authService.getUser());
     });
   }
@@ -32,6 +32,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
     }
   }
 
+  // Logout
   handleLogout(): void {
     this.authService.logout();
     this.router.navigateByUrl("/public/homepage");

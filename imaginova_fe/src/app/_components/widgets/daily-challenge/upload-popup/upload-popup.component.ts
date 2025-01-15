@@ -12,23 +12,27 @@ import { CommonModule } from '@angular/common';
 })
 export class UploadPopupComponent {
   @Input() isVisible: boolean = false;
+
   @Input() challengeId: number | undefined;
+
   @Input() userId: number = 0;
+
   @Output() closePopup = new EventEmitter<void>();
   @Output() alreadyParticipated = new EventEmitter<void>();
 
   errorMessage: string = '';
   successMessage: string = '';
   uploadStatus: 'success' | 'error' | null = null;
+
   upload_submitted = false;
-  fileName: string = 'No file selected'; //nome del file selezionato
+  fileName: string = 'No file selected'; 
   selectedFile: File | null = null; 
-  titleCharCount: number = 0; //contatore caratteri titolo
-  descriptionCharCount: number = 0; //contatore caratteri descrizione
+
+  titleCharCount: number = 0; 
+  descriptionCharCount: number = 0; 
 
   constructor(private creationService: CreationService) {}
 
-  // Form e dati creazione
   creation_Form = new FormGroup({
     creation_title: new FormControl('', [
       Validators.required,
@@ -48,7 +52,7 @@ export class UploadPopupComponent {
     storage_type: 0  
   };  
 
-  //rende visibile o meno il popup ed emette l'evento al padre
+  // Rende visibile o meno il popup ed emette l'evento al padre
   toggleUploadPopup(){
     this.isVisible = !this.isVisible;
     this.upload_submitted = false;
@@ -57,7 +61,7 @@ export class UploadPopupComponent {
     this.closePopup.emit();
   }
 
-  //gestione dell'inserimento del file e controllo che sia solo un'immagine
+  // Gestione dell'inserimento del file e controllo che sia solo un'immagine
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
   
@@ -81,7 +85,7 @@ export class UploadPopupComponent {
   }
   
 
-  //gestione del caricamento dei dati della creazione
+  // Gestione del caricamento dei dati della creazione
   handleUpload() {
     this.upload_submitted = true;
 
@@ -116,31 +120,30 @@ export class UploadPopupComponent {
     }
   }
 
-  //gestione messaggi di successo
+  // Gestione messaggi di successo o di errore
   showSuccessMessage() {
     this.uploadStatus = 'success';
     this.successMessage = `You have successfully uploaded your wonderful creation, Congrats!`;
   }
 
-  //gestione messaggi di errore
   showErrorMessage(errorMessage: string) {
     this.uploadStatus = 'error';
     this.errorMessage = errorMessage;
   }
 
-  //aggiornamento della lunghezza del titolo
+  // Aggiornamento della lunghezza del titolo
   updateCharacterCount(): void {
     const titleControl = this.creation_Form.get('creation_title');
     this.titleCharCount = titleControl?.value?.length || 0;
   }
 
-  //aggiornamento della lunghezza della descrizione
+  // Aggiornamento della lunghezza della descrizione
   updateDescriptionCharacterCount(): void {
     const descriptionControl = this.creation_Form.get('creation_description');
     this.descriptionCharCount = descriptionControl?.value?.length || 0;
   }
 
-  //chiude il messaggio di errore e torna al form
+  // Chiude il messaggio di errore e torna al form
   resetStatus(){
     this.uploadStatus = null;
   }

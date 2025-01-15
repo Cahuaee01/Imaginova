@@ -14,19 +14,21 @@ import { ThrobberComponent } from '../../../widgets/throbber/throbber.component'
 })
 export class SignupComponent {
   signup_submitted = false;
+
   registrationStatus: 'success' | 'error' | null = null;
   errorMessage: string = '';
   successMessage: string = '';
+
   isLoading: boolean = false;
 
   constructor(private router: Router, private registrationService: UserService) {}
 
-  //regex come da backend per maggiore consistenza con la gestione degli errori
+  // Regex come da backend per maggiore consistenza con la gestione degli errori
   static emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   static usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
   static passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}$/;
 
-  //validatori personalizzati per stampare il messaggio esatto
+  // Validatori personalizzati per email, username e password
   emailValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     return SignupComponent.emailRegex.test(control.value) ? null : { invalidEmail: true };
@@ -57,7 +59,6 @@ export class SignupComponent {
     };
   }
 
-  //form per la registrazione
   register_Form = new FormGroup(
     {
       register_email: new FormControl('', [
@@ -79,7 +80,7 @@ export class SignupComponent {
     { validators: this.passwordMatchValidator('register_pass1', 'register_pass2') }
   );
 
-  //gestione della registrazione utente
+  // Registrazione utente
   handleRegister() {
     this.signup_submitted = true;
   
@@ -115,12 +116,12 @@ export class SignupComponent {
     }
   }
 
-  //gestori viste
+  // Gestori viste
   returnToSignup(){
     this.registrationStatus = null;
   }
 
-  //gestori per i messaggi di errore o successo
+  // Gestori per i messaggi di errore o successo
   showSuccessMessage() {
     this.registrationStatus = 'success';
     this.successMessage = `You can now login with your new account, Congrats ${this.register_Form.value.register_username}!`;

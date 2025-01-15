@@ -15,19 +15,21 @@ import { Router } from '@angular/router';
 })
 export class CreationBigComponent implements OnInit{
   @Input() item!: CreationItem;
+
   isFullImageVisible: boolean = false;
   fullscreenImagePath: string = '';
+
   isLogged = false;
 
   constructor (private creationService: CreationService, private authService: UserService, private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit() { // Verifica se l'utente è loggato
     this.authService.isLogged$.subscribe((logged) => {
       this.isLogged = logged;
     });
   }
 
-  //preleva il path dell'immagine
+  // Preleva il path dell'immagine
   getImageSource(creation: CreationItem): string {
     const baseUrl = config.apiUrl;
     const formattedPath = creation.media_path?.replace(/\\/g, '/');
@@ -45,14 +47,14 @@ export class CreationBigComponent implements OnInit{
     this.isFullImageVisible = false;
   }
 
-  //preleva la data della creazione
+  // Preleva la data della creazione
   getDayFromCreationDate(date: Date): string {
     const parsedDate = new Date(date);
     const month = parsedDate.getMonth() + 1;
     return `${month.toString()}/${parsedDate.getDate().toString()}/${parsedDate.getFullYear().toString()}`;
   }  
 
-  //funzione per mettere o togliere like o dislike
+  // Funzione per mettere o togliere like o dislike
   setVote(creation: CreationItem, vote: string){
     this.creationService.setVote(creation.challenge, creation.creation_id as number, vote).subscribe({
       next: (data) => {
@@ -66,10 +68,12 @@ export class CreationBigComponent implements OnInit{
     });
   } 
 
+  // Mostra il profilo cliccando sul nome del proprietario della creazione
   showProfile(user_id: number): void {
     this.router.navigate([`/private/profile/${user_id}`]);
   }
 
+  // Va alla galleria relativa alla challenge selezionata tramite la sua data
   showMore(challenge_id: number){
     this.router.navigate([`/private/gallery/${challenge_id}`]);
   }

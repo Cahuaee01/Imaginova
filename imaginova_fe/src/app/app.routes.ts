@@ -56,12 +56,12 @@ export const routes: Routes = [
     },
     {
         path: "",
-        redirectTo: "/public/homepage", //per ora
+        redirectTo: "/public/homepage", 
         pathMatch: 'full'
     },
     {
         path: "**",
-        redirectTo: "/public/homepage" //per ora
+        redirectTo: "/public/homepage" 
     }
     
 ];

@@ -10,10 +10,13 @@ import { CommonModule } from '@angular/common';
 })
 export class CountdownTimerComponent implements OnChanges, OnDestroy {
   @Input() time: number | undefined;
+
   @Output() timerFinished = new EventEmitter<void>(); //evento per notificare il padre
+
   timeLeft: number = 0;
   timer: any;
 
+  // Se l'orario inserito cambia (come a seguito del reload della challenge giornaliera) allora restarta il countdown
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['time'] && changes['time'].currentValue !== undefined) {
       this.startCountdown(changes['time'].currentValue);
@@ -47,12 +50,13 @@ export class CountdownTimerComponent implements OnChanges, OnDestroy {
         this.timeLeft--;
       } else {
         clearInterval(this.timer);
-        this.timerFinished.emit(); //notifica al padre
-        this.startCountdown(time); //restarta il timer
+        this.timerFinished.emit(); // Notifica al padre
+        this.startCountdown(time); // Restarta il timer
       }
     }, 1000);
   }
 
+  // Formatta l'orario come HH:MM:SS
   formatTime() {
     const hours = Math.floor(this.timeLeft / 3600);
     const minutes = Math.floor((this.timeLeft % 3600) / 60);
@@ -60,6 +64,7 @@ export class CountdownTimerComponent implements OnChanges, OnDestroy {
     return `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
   }
 
+  // Aggiunge uno 0 davanti alle cifre singole
   pad(num: number): string {
     return num < 10 ? '0' + num : num.toString();
   }

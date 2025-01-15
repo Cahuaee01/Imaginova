@@ -15,7 +15,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     }
   }
 
-  //fallimento
+  // Fallimento (il token non è valido o scaduto)
   authService.logout();
   router.navigate(['/public/homepage']);
   return false;

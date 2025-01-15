@@ -1,75 +1,74 @@
 /* Nascondi la barra di scorrimento verticale */
 ul {
-    overflow-y: hidden;
-  }
+  overflow-y: hidden;
+}
   
-  /* Barra di scroll personalizzata */
-  ul::-webkit-scrollbar {
-      height: 8px;
-      background-color: #f1f1f1;
-  }
-  
-  ul::-webkit-scrollbar-thumb {
-      background-color: #2A3B87;
-      border-radius: 4px;
-  }
-  
-  ul::-webkit-scrollbar-thumb:hover { 
-      background-color: #476ABA;
-  }
-  
-  /* Barra di scroll personalizzata */
-  div::-webkit-scrollbar {
-      width: 6px;
-      background-color: #f1f1f1;
-  }
-  
-  div::-webkit-scrollbar-thumb {
-      background-color: #2A3B87;
-      border-radius: 4px;
-  }
-  
-  div::-webkit-scrollbar-thumb:hover { 
-      background-color: #476ABA;
-  }
+/* Barra di scroll personalizzata */
+ul::-webkit-scrollbar {
+  height: 8px;
+  background-color: #f1f1f1;
+}
 
-  /* Barra di scroll personalizzata */
-  .description::-webkit-scrollbar {
-    width: 6px;
-    background-color: #f1f1f1;
-  }
+ul::-webkit-scrollbar-thumb {
+  background-color: #2A3B87;
+  border-radius: 4px;
+}
 
-  .description::-webkit-scrollbar-thumb {
-      background-color: #2A3B87;
-      border-radius: 4px;
-  }
+ul::-webkit-scrollbar-thumb:hover { 
+  background-color: #476ABA;
+}
 
-  .description::-webkit-scrollbar-thumb:hover { 
-      background-color: #476ABA;
-  }
+/* Barra di scroll personalizzata */
+div::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f1f1f1;
+}
 
-  .description {
-    font-family: "Merriweather";
-  }
+div::-webkit-scrollbar-thumb {
+  background-color: #2A3B87;
+  border-radius: 4px;
+}
 
-  .kalnia-font{
-    font-family: "Kalnia";
+div::-webkit-scrollbar-thumb:hover { 
+  background-color: #476ABA;
+}
+
+/* Barra di scroll personalizzata */
+.description::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f1f1f1;
+}
+
+.description::-webkit-scrollbar-thumb {
+  background-color: #2A3B87;
+  border-radius: 4px;
+}
+
+.description::-webkit-scrollbar-thumb:hover { 
+  background-color: #476ABA;
+}
+
+.description {
+  font-family: "Merriweather";
+}
+
+.kalnia-font{
+  font-family: "Kalnia";
 }
 
 .dm-serif-display-font{
-    font-family: "DM Serif Display";
+  font-family: "DM Serif Display";
 }
 
 .card {
-    position: relative;
-    overflow: visible;
-  }
-  
-  .card-content {
-    overflow-x: hidden;
-  }
-  
+  position: relative;
+  overflow: visible;
+}
 
+.card-content {
+  overflow-x: hidden;
+}
+  
 .border-around::before {
   content: '';
   position: absolute;

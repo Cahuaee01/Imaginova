@@ -6,27 +6,29 @@ import { CommonModule } from '@angular/common';
 import { CreationItem } from '../../../../_items/CreationType';
 import { CreationService } from '../../../../_services/creation.service';
 import { UserService } from '../../../../_services/user.service';
-import { CreationComponent } from '../../../widgets/creation-small/creation.component';
 import { CreationCarouselComponent } from '../../../widgets/creation-carousel/creation-carousel.component';
 
 @Component({
   selector: 'app-challenge-display',
   standalone: true,
-  imports: [ChallengeComponent, ReactiveFormsModule, CommonModule, CreationComponent, CreationCarouselComponent],
+  imports: [ChallengeComponent, ReactiveFormsModule, CommonModule, CreationCarouselComponent],
   templateUrl: './challenge.component.html',
   styleUrl: './challenge.component.scss'
 })
 export class ChallengeDisplayComponent implements OnInit{
   challenge_id: number | undefined;
   creations: CreationItem[] = [];
+
   currentPage: number = 1;
-  itemsPerPage: number = 6; //numero di elementi per pagina
+  itemsPerPage: number = 6; 
   disableNext: boolean = false;
+
   sortBy: string = 'likes';
   order: string = 'desc';
   media: string = 'all';
   filterStatus: boolean = false;
-  selectedCreationIndex: number = 0; // indice dell'elemento selezionato
+
+  selectedCreationIndex: number = 0; // Indice dell'elemento selezionato
   isFullCreationVisible: boolean = false;
   isFullscreenVisible: boolean = false;
   voteStatus: 'like' | 'dislike' | null = null;
@@ -53,6 +55,7 @@ export class ChallengeDisplayComponent implements OnInit{
       },
     );
 
+  // Aggiunge i filtri selezionati 
   addFilters(){
     this.sortBy = this.filter_Form.value.sortBy as string;
     this.order = this.filter_Form.value.order as string;
@@ -66,6 +69,7 @@ export class ChallengeDisplayComponent implements OnInit{
     this.currentPage = 1;
   }
 
+  // Apre la barra dei filtri
   openFilters() {
       this.filterStatus = !this.filterStatus; 
   }  

@@ -6,7 +6,6 @@ import { ChallengeService } from '../../../_services/challenge.service';
 import twemoji from 'twemoji';
 import { UserService } from '../../../_services/user.service';
 import { Subscription } from 'rxjs';
-import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UploadPopupComponent } from './upload-popup/upload-popup.component';
 import { ThrobberComponent } from '../throbber/throbber.component';
@@ -14,23 +13,24 @@ import { ThrobberComponent } from '../throbber/throbber.component';
 @Component({
   selector: 'app-daily-challenge',
   standalone: true,
-  imports: [CountdownTimerComponent, CommonModule, RouterLink, ReactiveFormsModule, UploadPopupComponent, ThrobberComponent], 
+  imports: [CountdownTimerComponent, CommonModule, ReactiveFormsModule, UploadPopupComponent, ThrobberComponent], 
   templateUrl: './daily-challenge.component.html',
   styleUrls: ['./daily-challenge.component.scss']
 })
 export class DailyChallengeComponent implements OnInit {
-  // CHALLENGE MANAGEMENT
   @Output() challengeIdChange = new EventEmitter<number>();
   @Output() refreshCreations = new EventEmitter<void>();
+
   challenge: ChallengeItem = {} as ChallengeItem;
+
   emojiHtml: string | undefined;
+
   countdownTime: number | undefined; 
 
   isLogged = false;
   private subscription: Subscription | null = null;
   alreadyParticipated: boolean = false;
 
-  // CREATION UPLOAD MANAGEMENT
   isUploadPopupVisible: boolean = false;
   
   userId: number = 0;
@@ -41,15 +41,15 @@ export class DailyChallengeComponent implements OnInit {
   constructor(private challengeService: ChallengeService, private authService: UserService) {}
 
   ngOnInit() {
-    //gestione emoji associata a festività
+    // Gestione emoji associata a festività
     const emoji = this.getHolidayEmoji();
     this.emojiHtml = twemoji.parse(emoji);
 
-    //caricamento della challenge
+    // Caricamento della challenge
     this.loadChallenge();
   }
-  
-  // CHALLENGE MANAGEMENT
+
+  // Carica la challenge giornaliera
   loadChallenge() {
     this.isLoading = true;
     this.challengeService.getCurrentChallenge().subscribe({
@@ -57,14 +57,15 @@ export class DailyChallengeComponent implements OnInit {
         this.challenge = data.challenge; 
         if (this.challenge.challenge_id) {
           this.challengeId = this.challenge.challenge_id as number;
-          this.challengeIdChange.emit(this.challenge.challenge_id); //emissione dell'evento per dare l'id della challenge alle creazioni da caricare
+          this.challengeIdChange.emit(this.challenge.challenge_id); // Emette l'id della challenge alle creazioni da caricare
         }
-        const challengeDate = new Date(data.challenge.challenge_date); //setto il countdown timer
+        const challengeDate = new Date(data.challenge.challenge_date); // Imposta il countdown timer
         this.countdownTime = challengeDate.getHours(); 
+
         this.subscription = this.authService.isLogged$.subscribe((logged) => {
-          this.isLogged = logged; //aggiorna lo stato in tempo reale
+          this.isLogged = logged;
           if (this.isLogged) {
-            this.checkUserParticipation(); //verifica se l'utente ha già partecipato
+            this.checkUserParticipation(); // Verifica se l'utente ha già partecipato
           }
         this.isLoading = false;
         });
@@ -77,7 +78,7 @@ export class DailyChallengeComponent implements OnInit {
     });
   }
 
-  //verifica partecipazione utente alla challenge
+  // Verifica partecipazione utente alla challenge
   checkUserParticipation() {
     const token = sessionStorage.getItem('authToken');
     if (token) {
@@ -103,17 +104,17 @@ export class DailyChallengeComponent implements OnInit {
     }
   }  
 
-  //metodo per aggiornare la challenge al termine del timer
+  // Metodo per aggiornare la challenge al termine del timer
   onTimerFinished() {
     this.loadChallenge();
   }
 
-  //evento emesso dal figlio, se carico la creazione disabilita il pulsante I'm up
+  // Se l'utente ha già partecipato disabilita il pulsante I'm up
   refreshParticipation(){
     this.alreadyParticipated = true;
   }
 
-  //ritorna l'emoji associata alla data corrente
+  // Restituisce l'emoji associata alla data corrente
   getHolidayEmoji(): string {
     const today = new Date();
     const formattedDate = today.toISOString().slice(5, 10); 
@@ -132,7 +133,7 @@ export class DailyChallengeComponent implements OnInit {
     { date: "12-31", emoji: "&#127878" }, // Fuochi d'artificio
   ];
 
-  // CREATION UPLOAD MANAGEMENT
+  // Apre il popup di inserimento della creazione
   toggleUploadPopup(): void {
     this.isUploadPopupVisible = !this.isUploadPopupVisible;
     this.refreshCreations.emit();

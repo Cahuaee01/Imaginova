@@ -1,31 +1,31 @@
 .kalnia-font{
-    font-family: "Kalnia";
+  font-family: "Kalnia";
 }
 
 .dm-serif-display-font{
-    font-family: "DM Serif Display";
+  font-family: "DM Serif Display";
 }
 
 .chatgpt-text {
-    color: #E0D7F6;
-    box-shadow: #000;
-    transition: color 0.3s ease, box-shadow 0.3s ease;
-  }
+  color: #E0D7F6;
+  box-shadow: #000;
+  transition: color 0.3s ease, box-shadow 0.3s ease;
+}
 
 @keyframes tilt {
-    0%, 100% {
-      transform: rotate(-15deg);
-    }
-    50% {
-      transform: rotate(15deg); 
-    }
+  0%, 100% {
+    transform: rotate(-15deg);
   }
+  50% {
+    transform: rotate(15deg); 
+  }
+}
   
-  .tilt-animation {
-    animation: tilt 1s ease-in-out; 
-    animation-iteration-count: 5; 
-    transform-origin: center bottom;
-  }
+.tilt-animation {
+  animation: tilt 1s ease-in-out; 
+  animation-iteration-count: 5; 
+  transform-origin: center bottom;
+}
   
 
 

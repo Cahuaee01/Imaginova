@@ -16,15 +16,17 @@ export class PasswordResetComponent implements OnInit{
   static passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}$/;
    
   reset_submitted = false;
+
   resetStatus: 'success' | 'error' | null = null;
   errorMessage: string = '';
   successMessage: string = '';
+
   email: string = '';
   otp: string = '';
   password: string = '';
+
   isLoading: boolean = false;
 
-  //form con la nuova password
   new_password_Form = new FormGroup(
     {
       reset_password1: new FormControl('', [
@@ -40,16 +42,16 @@ export class PasswordResetComponent implements OnInit{
 
   constructor(private route: ActivatedRoute, private resetPasswordService: UserService) {}
 
-  //esempio: http://localhost:4200/password-reset?otp=123456
+  // Esempio: http://localhost:4200/password-reset?otp=123456
   ngOnInit(): void {
-    //prelevo l'otp dai query param
+    // Prelevo l'otp dai query param
     this.route.queryParams.subscribe((params) => {
       const otp = params['otp'];
     
       if (otp) {
         this.otp = otp;
         
-        //verifico otp e prelevo email
+        // Verifico otp e prelevo email relativa all'otp
         this.resetPasswordService.verifyOtp(this.otp).subscribe({
           next: (data) => {
             this.email = data.email;
@@ -67,14 +69,14 @@ export class PasswordResetComponent implements OnInit{
     });
   }
 
-  //cambio della password
+  // Cambio della password
   handlePasswordReset() {
     this.reset_submitted = true;
 
     if (this.new_password_Form.valid) {
         this.password = this.new_password_Form.value.reset_password1 as string;
         this.isLoading = true;
-        //cambio password
+
         this.resetPasswordService.changePassword(this.email, this.password, this.otp).subscribe({
             next: () => {
                 this.showSuccessMessage();
@@ -95,7 +97,7 @@ export class PasswordResetComponent implements OnInit{
     }
   }
 
-  //validatori per la password
+  // Validatori per la password
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     return PasswordResetComponent.passwordRegex.test(control.value) ? null : { invalidPassword: true };
@@ -116,12 +118,12 @@ export class PasswordResetComponent implements OnInit{
     };
   }
   
-  //gestori viste
+  // Gestori viste
   showReset(){
     this.resetStatus = null;
   }
 
-  //gestori per i messaggi di errore o successo
+  // Gestori per i messaggi di errore o successo
   showSuccessMessage() {
     this.resetStatus = 'success';
     this.successMessage = `You have succesfully reset your password`;

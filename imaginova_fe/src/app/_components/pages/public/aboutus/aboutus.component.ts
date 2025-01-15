@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class AboutusComponent {
   activeSection: string = 'about';  
 
+  // Attiva la sezione cliccata
   setActiveSection(section: string) {
     this.activeSection = section;
   }

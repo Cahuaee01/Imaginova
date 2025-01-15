@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './_components/widgets/header/header.component';
 import { FooterComponent } from './_components/widgets/footer/footer.component';
 import twemoji from "twemoji";
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, HeaderComponent, FooterComponent, SessionExpiredPopupComponent, CommonModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, SessionExpiredPopupComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -24,10 +24,11 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   title = 'imaginova_fe';
 
-  ngOnInit(): void { //popup di sessione scaduta
+  ngOnInit(): void { // Popup di sessione scaduta
     this.popupVisible$ = this.popupService.popupVisible$;
   }
 
+  // Converte tutte le emoji e unicode in png
   ngAfterViewInit(): void {
     twemoji.parse(document.body, {
       folder: 'png',
@@ -35,6 +36,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
+  // Gestione della chiusura del popup di sessione scaduta
   closePopup() {
     this.popupService.closePopup();
   }
